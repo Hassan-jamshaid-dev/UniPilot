@@ -15,7 +15,7 @@ export type OnboardingDecorProps = {
 
 /**
  * Get Started background: organic corner curves + soft glow behind the mark
- * (top-left mockup — cream field, forest + ochre accents).
+ * (cream field, navy + mustard accents).
  */
 export function OnboardingDecor({ width: w, heroHeight: hh, markCenterY: cy }: OnboardingDecorProps) {
   const cx = w / 2;

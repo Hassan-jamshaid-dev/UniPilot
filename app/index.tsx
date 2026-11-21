@@ -19,7 +19,7 @@ const FADE_OUT_MS = motion.base;
 const BAR_WIDTH = 140;
 const BAR_HEIGHT = 4;
 
-// Splash — mountain / sunset beat from the mockup, then fades to Get Started or Home.
+// Splash — navy field, U + plane, Plan. Apply. Achieve., then fades to Get Started or Home.
 export default function SplashScreen() {
   const navigation = useNavigation();
   const pathname = usePathname();
@@ -110,16 +110,16 @@ export default function SplashScreen() {
           styles.brand,
           {
             opacity: brandOpacity,
-            paddingTop: insets.top + 28,
+            paddingTop: insets.top + Math.max(height * 0.22, 96),
           },
         ]}
       >
-        <VMark size={96} />
+        <VMark size={104} tone="onDark" />
         <Text style={styles.wordmark} maxFontSizeMultiplier={1.2}>
           UniPilot
         </Text>
-        <Text style={styles.quote} maxFontSizeMultiplier={1.2}>
-          Your dreams deserve a plan.
+        <Text style={styles.tagline} maxFontSizeMultiplier={1.2}>
+          Plan. Apply. Achieve.
         </Text>
       </Animated.View>
 
@@ -140,7 +140,7 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.backgroundSoft,
+    backgroundColor: colors.primary,
   },
   brand: {
     alignItems: 'center',
@@ -148,23 +148,23 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   wordmark: {
-    marginTop: 10,
-    color: colors.primary,
+    marginTop: 14,
+    color: colors.white,
     fontFamily: fonts.serifBold,
     fontWeight: '700',
-    fontSize: 34,
-    lineHeight: 42,
+    fontSize: 36,
+    lineHeight: 44,
     letterSpacing: 0.2,
   },
-  quote: {
-    marginTop: 16,
-    color: colors.accent,
-    fontFamily: fonts.serifRegular,
-    fontStyle: 'italic',
-    fontSize: 20,
-    lineHeight: 28,
+  tagline: {
+    marginTop: 12,
+    color: colors.white,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    lineHeight: 24,
+    letterSpacing: 0.4,
     textAlign: 'center',
-    maxWidth: 280,
+    opacity: 0.88,
   },
   track: {
     position: 'absolute',

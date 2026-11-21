@@ -10,7 +10,7 @@ export type PaywallDecorProps = {
 };
 
 /**
- * Soft atmosphere behind the Premium paywall — forest depth + corner curves.
+ * Soft atmosphere behind the Premium paywall — navy depth + mustard glow.
  */
 export function PaywallDecor({ width: w, height: h }: PaywallDecorProps) {
   return (

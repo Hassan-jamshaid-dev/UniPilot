@@ -83,7 +83,7 @@ export default function PaywallScreen() {
   }, [nativeAvailable]);
 
   // Web: #root / body stay light from the stack, which shows as a white band under
-  // Restore. Paint the document forest-green while this screen is mounted.
+  // Restore. Paint the document navy while this screen is mounted.
   useEffect(() => {
     if (Platform.OS !== 'web' || typeof document === 'undefined') return;
     const html = document.documentElement;
@@ -305,7 +305,7 @@ export default function PaywallScreen() {
           </Pressable>
 
           <View style={styles.markWrap} accessibilityElementsHidden>
-            <VMark size={MARK_SIZE} />
+            <VMark size={MARK_SIZE} tone="onDark" />
           </View>
 
           <Text style={styles.eyebrow}>Premium</Text>
@@ -319,7 +319,7 @@ export default function PaywallScreen() {
           <View style={styles.features}>
             {FEATURES.map((feature, index) => (
               <View key={feature} style={[styles.featureRow, index > 0 && styles.featureRule]}>
-                <Ionicons name="checkmark" size={15} color={colors.paywallMuted} />
+                <Ionicons name="checkmark" size={15} color={colors.accent} />
                 <Text style={styles.featureText}>{feature}</Text>
               </View>
             ))}
@@ -347,7 +347,7 @@ export default function PaywallScreen() {
                 </View>
                 <View style={[styles.radio, plan === 'yearly' && styles.radioOn]}>
                   {plan === 'yearly' ? (
-                    <Ionicons name="checkmark" size={11} color={colors.paywallTop} />
+                    <Ionicons name="checkmark" size={11} color={colors.textOnAccent} />
                   ) : null}
                 </View>
               </View>
@@ -370,7 +370,7 @@ export default function PaywallScreen() {
                 <Text style={styles.planLabel}>Monthly</Text>
                 <View style={[styles.radio, plan === 'monthly' && styles.radioOn]}>
                   {plan === 'monthly' ? (
-                    <Ionicons name="checkmark" size={11} color={colors.paywallTop} />
+                    <Ionicons name="checkmark" size={11} color={colors.textOnAccent} />
                   ) : null}
                 </View>
               </View>
@@ -585,13 +585,13 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 8,
     borderCurve: 'continuous',
-    backgroundColor: colors.whiteAlpha25,
+    backgroundColor: colors.accent,
   },
   savePillText: {
     fontFamily: fonts.semibold,
     fontSize: 11,
     lineHeight: 14,
-    color: colors.white,
+    color: colors.textOnAccent,
     letterSpacing: 0.2,
   },
   radio: {
@@ -604,8 +604,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   radioOn: {
-    borderColor: colors.white,
-    backgroundColor: colors.white,
+    borderColor: colors.accent,
+    backgroundColor: colors.accent,
   },
   planPrice: {
     marginTop: 10,

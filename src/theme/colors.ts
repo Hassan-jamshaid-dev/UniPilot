@@ -1,72 +1,76 @@
 // UniPilot colour palette. Import from here instead of hard-coding hex values.
 export const colors = {
-  // Brand — deep forest green (kept as `purple` so existing screens keep compiling)
-  purple: '#004225',
-  /** Primary brand green — preferred new name; same value as `purple`. */
-  primary: '#004225',
-  /** Softened green for secondary fills / hover. */
-  primarySoft: '#0A5C38',
-  blue: '#0A5C38',
-  /** Muted earthy orange / ochre accent. */
-  accent: '#E07A2C',
-  // Brand gradient (subtle green depth), always top-left -> bottom-right
-  gradient: ['#004225', '#0A5C38'] as const,
+  // Brand — deep navy (kept as `purple` so existing screens keep compiling)
+  purple: '#0A192F',
+  /** Primary brand navy — preferred new name; same value as `purple`. */
+  primary: '#0A192F',
+  /** Softened navy for secondary fills / hover. */
+  primarySoft: '#1B2A4A',
+  blue: '#1B2A4A',
+  /** Mustard / gold accent — primary CTAs. */
+  accent: '#E8AF50',
+  /** Dark text sitting on mustard CTAs. */
+  textOnAccent: '#0A192F',
+  /** Navy track / divider sitting on mustard cards. */
+  onAccentTrack: '#0A192F33',
+  // Brand gradient (mustard depth for CTAs), always top-left -> bottom-right
+  gradient: ['#E8AF50', '#D4A045'] as const,
 
   // Surfaces
-  background: '#F5F2E8',
-  /** Warm cream used behind Splash, Onboarding, and tabs. */
-  backgroundSoft: '#F5F2E8',
+  background: '#FDF8F0',
+  /** Warm cream used behind Splash cream screens, Onboarding, and tabs. */
+  backgroundSoft: '#FDF8F0',
   /** Near-white tile behind the brand mark. */
-  tileSurface: '#FAF8F2',
+  tileSurface: '#FFFcf7',
   white: '#FFFFFF',
   /** Translucent whites for glassy surfaces on top of dark brand fills. */
   whiteAlpha18: '#FFFFFF2E',
   whiteAlpha25: '#FFFFFF40',
 
   // Text
-  textPrimary: '#1A1D29',
+  textPrimary: '#0A192F',
   /** textPrimary at ~30% — modal backdrops. */
-  scrim: '#1A1D294D',
-  textSecondary: '#6B7280',
+  scrim: '#0A192F4D',
+  textSecondary: '#5C6B7A',
   /** TextInput placeholder text. */
-  placeholder: '#9CA3AF',
+  placeholder: '#9AA5B1',
   /** Counters and field hints sitting below inputs. */
-  muted: '#6B7280',
+  muted: '#5C6B7A',
 
   // Lines and fills
   /** Hairline separators: tab bar top border, InsightRow dividers, ScoreRing track. */
-  hairline: '#E8E4D9',
+  hairline: '#E8E2D6',
   /** Inactive tab icon/label tint, and the "neutral" insight dot. */
-  tabInactive: '#8B9080',
+  tabInactive: '#8A93A0',
   /** Small chevron / disclosure glyphs on list rows. */
-  chevron: '#B0B5A8',
+  chevron: '#A8B0BA',
   /** Grey bars in the faded placeholder behind LockedCard. */
-  skeleton: '#E4E0D4',
+  skeleton: '#E8E2D6',
 
-  // Green accents (light) — keys kept as purple* for existing imports
-  /** Pale green fill behind brand icons (icon tiles, lock circles). */
-  purpleTint: '#E4EDE6',
-  /** Pale green outline for pill buttons. */
-  purpleBorder: '#C5D4C9',
+  // Navy accents (light) — keys kept as purple* for existing imports
+  /** Pale navy fill behind brand icons (icon tiles, lock circles). */
+  purpleTint: '#E8EEF5',
+  /** Pale navy outline for pill buttons. */
+  purpleBorder: '#C5D0DE',
   /** Alias preferred name for pale brand fill. */
-  primaryTint: '#E4EDE6',
-  /** Soft orange wash for accent chips. */
-  accentTint: '#F8E8D8',
+  primaryTint: '#E8EEF5',
+  /** Soft mustard wash for accent chips. */
+  accentTint: '#FBF0D9',
 
   // Controls
   /** Splash progress-bar track. */
-  progressTrack: '#E4E0D4',
+  progressTrack: '#FFFFFF33',
   /** Flat fill for a disabled GradientButton. */
-  buttonDisabled: '#B8C4B8',
+  buttonDisabled: '#C5CBD4',
 
   // Status colours (used by later screens, e.g. evaluation verdicts)
-  success: '#0A7A4A',
-  warning: '#E07A2C',
+  success: '#2F6B4F',
+  warning: '#E8AF50',
   danger: '#EF4444',
 
-  // Paywall (dark screen — forest green depth instead of violet)
-  paywallTop: '#002816',
-  paywallBottom: '#004225',
+  // Paywall (dark screen — navy depth)
+  paywallTop: '#06101F',
+  paywallBottom: '#0A192F',
   paywallCard: '#FFFFFF14',
   paywallCardSelected: '#FFFFFF29',
   paywallMuted: '#FFFFFFB8',
@@ -74,37 +78,37 @@ export const colors = {
 
   // Brand mark (UniPilot U + plane)
   mark: {
-    forest: '#004225',
-    green: '#0A5C38',
-    accent: '#E07A2C',
+    forest: '#0A192F',
+    green: '#1B2A4A',
+    accent: '#E8AF50',
     // Legacy keys remapped so older gradient stops still resolve
-    violet: '#004225',
-    purple: '#0A5C38',
-    blue: '#0A5C38',
-    sky: '#1A7A4E',
+    violet: '#0A192F',
+    purple: '#1B2A4A',
+    blue: '#1B2A4A',
+    sky: '#2A3F63',
   },
 
   // Decorative shapes on Splash / Onboarding / corner curves
   decor: {
-    forest: '#004225',
-    forestSoft: '#0A5C38',
-    ochre: '#E07A2C',
-    ochreSoft: '#F0A05A',
-    cream: '#F5F2E8',
-    mist: '#D9E5D8',
-    glow: '#E8F0E6',
-    ribbon: '#C5D4C9',
-    ribbonLight: '#D9E5D8',
-    ribbonClear: '#C5D4C900',
-    ribbonLightClear: '#D9E5D800',
-    line: '#C5D4C9',
-    orbit: '#A8BFAE',
-    sparkle: '#E07A2C',
-    dot: '#0A5C38',
-    sphereLight: '#A8BFAE',
-    // Legacy pastel names remapped away from violet
-    periwinkle: '#D9E5D8',
-    lavender: '#E4EDE6',
-    ice: '#E8F0E6',
+    forest: '#0A192F',
+    forestSoft: '#1B2A4A',
+    ochre: '#E8AF50',
+    ochreSoft: '#F0C56E',
+    cream: '#FDF8F0',
+    mist: '#D6DEE8',
+    glow: '#EEF2F8',
+    ribbon: '#C5D0DE',
+    ribbonLight: '#D6DEE8',
+    ribbonClear: '#C5D0DE00',
+    ribbonLightClear: '#D6DEE800',
+    line: '#C5D0DE',
+    orbit: '#8A93A0',
+    sparkle: '#E8AF50',
+    dot: '#1B2A4A',
+    sphereLight: '#8A93A0',
+    // Legacy pastel names remapped away from violet / green
+    periwinkle: '#D6DEE8',
+    lavender: '#E8EEF5',
+    ice: '#EEF2F8',
   },
 };

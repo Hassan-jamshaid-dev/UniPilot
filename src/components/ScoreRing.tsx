@@ -56,8 +56,8 @@ export function ScoreRing({
       <Svg width={size} height={size} accessibilityElementsHidden>
         <Defs>
           <LinearGradient id="vetlyRing" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0" stopColor={colors.primary} />
-            <Stop offset="1" stopColor={colors.blue} />
+            <Stop offset="0" stopColor={colors.accent} />
+            <Stop offset="1" stopColor={colors.primary} />
           </LinearGradient>
         </Defs>
 

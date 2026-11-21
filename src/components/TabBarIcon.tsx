@@ -46,7 +46,7 @@ type TabBarLabelProps = {
   color: ColorValue;
 };
 
-/** Tab label with orange underline when active (mockup accent). */
+/** Tab label with mustard underline when active (mockup accent). */
 export function TabBarLabel({ label, focused, color }: TabBarLabelProps) {
   return (
     <View style={styles.labelCol}>

@@ -13,7 +13,7 @@ const MARK_SIZE = 128;
 const CTA_GROUP_HEIGHT = 56 + 8 + 18 + 16 + 20;
 const MIN_TEXT_TO_CTA_GAP = 24;
 
-// Get Started — top-left mockup: logo, Plan. Apply. Achieve., forest CTA.
+// Get Started — cream field: logo, Plan. Apply. Achieve., mustard CTA.
 export default function OnboardingScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -61,7 +61,7 @@ export default function OnboardingScreen() {
         <GradientButton
           label="Get Started"
           onPress={() => router.push('/goal')}
-          trailingIcon={<Ionicons name="arrow-forward" size={18} color={colors.white} />}
+          trailingIcon={<Ionicons name="arrow-forward" size={18} color={colors.textOnAccent} />}
         />
         <Text style={styles.guestHint} maxFontSizeMultiplier={1.3}>
           No account needed.

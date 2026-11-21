@@ -280,7 +280,7 @@ export default function EvaluateScreen() {
           disabled={!canAnalyze}
           icon={
             isAnalyzing ? (
-              <ActivityIndicator size="small" color={colors.white} />
+              <ActivityIndicator size="small" color={colors.textOnAccent} />
             ) : undefined
           }
           style={styles.footerBar}

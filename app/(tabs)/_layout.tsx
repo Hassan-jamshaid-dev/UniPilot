@@ -38,7 +38,7 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.tabInactive,
         tabBarHideOnKeyboard: true,
         tabBarStyle: {

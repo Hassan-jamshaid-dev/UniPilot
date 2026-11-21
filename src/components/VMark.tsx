@@ -7,19 +7,26 @@ import { colors } from '@/theme/colors';
 import { shadows } from '@/theme/shadows';
 
 /**
- * UniPilot brand mark: a stylized forest-green "U" with an orange paper-plane
- * motif flying through the upper-right opening.
+ * UniPilot brand mark: a stylized "U" with a mustard paper-plane motif
+ * flying through the upper-right opening.
  */
 
 export type VMarkProps = {
   /** Rendered width and height, in px. */
   size: number;
+  /**
+   * `brand` — navy U on cream surfaces.
+   * `onDark` — white U for navy splash / paywall backgrounds.
+   */
+  tone?: 'brand' | 'onDark';
   style?: StyleProp<ViewStyle>;
 };
 
 /** The U + plane mark with no background; sits directly on whatever is behind it. */
-export function VMark({ size, style }: VMarkProps) {
+export function VMark({ size, tone = 'brand', style }: VMarkProps) {
   const gradientId = `upmark-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const stemStart = tone === 'onDark' ? colors.white : colors.mark.green;
+  const stemEnd = tone === 'onDark' ? '#F5F7FA' : colors.mark.forest;
 
   return (
     <Svg
@@ -32,8 +39,8 @@ export function VMark({ size, style }: VMarkProps) {
     >
       <Defs>
         <LinearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor={colors.mark.green} />
-          <Stop offset="1" stopColor={colors.mark.forest} />
+          <Stop offset="0" stopColor={stemStart} />
+          <Stop offset="1" stopColor={stemEnd} />
         </LinearGradient>
       </Defs>
       {/* U stem — left */}
@@ -45,7 +52,7 @@ export function VMark({ size, style }: VMarkProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Orange paper plane */}
+      {/* Mustard paper plane */}
       <Path
         d="M70 18 L94 28 L78 36 L74 48 Z"
         fill={colors.accent}

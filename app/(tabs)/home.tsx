@@ -208,8 +208,8 @@ export default function HomeScreen() {
       <GradientButton
         label="Evaluate an opportunity"
         onPress={() => router.push('/evaluate')}
-        icon={<Ionicons name="sparkles" size={16} color={colors.white} />}
-        trailingIcon={<Ionicons name="arrow-forward" size={18} color={colors.white} />}
+        icon={<Ionicons name="sparkles" size={16} color={colors.textOnAccent} />}
+        trailingIcon={<Ionicons name="arrow-forward" size={18} color={colors.textOnAccent} />}
       />
 
       <Pressable
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 999,
-    backgroundColor: colors.primaryTint,
+    backgroundColor: colors.accentTint,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
   },
   progressCard: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
     borderRadius: radius.xxl,
     borderCurve: 'continuous',
     paddingVertical: 18,
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: 13,
     lineHeight: 18,
-    color: colors.white,
+    color: colors.textOnAccent,
     opacity: 0.88,
   },
   progressCount: {
@@ -490,38 +490,38 @@ const styles = StyleSheet.create({
     fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 34,
-    color: colors.white,
+    color: colors.textOnAccent,
   },
   progressSub: {
     marginTop: 2,
     fontFamily: fonts.regular,
     fontSize: 13,
     lineHeight: 18,
-    color: colors.white,
+    color: colors.textOnAccent,
     opacity: 0.8,
   },
   progressTrack: {
     marginTop: 12,
     height: 6,
     borderRadius: 3,
-    backgroundColor: colors.whiteAlpha25,
+    backgroundColor: colors.onAccentTrack,
     overflow: 'hidden',
   },
   progressFill: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: colors.accent,
+    backgroundColor: colors.primary,
   },
   progressDivider: {
     width: StyleSheet.hairlineWidth,
     alignSelf: 'stretch',
-    backgroundColor: colors.whiteAlpha25,
+    backgroundColor: colors.onAccentTrack,
   },
   progressLink: {
     fontFamily: fonts.semibold,
     fontSize: 14,
     lineHeight: 18,
-    color: colors.white,
+    color: colors.textOnAccent,
     paddingHorizontal: 4,
   },
   row: {

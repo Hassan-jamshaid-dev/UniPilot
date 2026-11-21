@@ -281,7 +281,7 @@ export default function PremiumOnboardingScreen() {
             disabled={!canContinue}
             trailingIcon={
               saving || isEdit ? undefined : (
-                <Ionicons name="arrow-forward" size={18} color={colors.white} />
+                <Ionicons name="arrow-forward" size={18} color={colors.textOnAccent} />
               )
             }
           />

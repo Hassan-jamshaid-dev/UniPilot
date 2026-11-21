@@ -82,13 +82,13 @@ export const type = {
     letterSpacing: 0.2,
     color: colors.textSecondary,
   },
-  /** White label for GradientButton and other filled CTAs. */
+  /** Dark navy label for mustard GradientButton CTAs. */
   button: {
     fontFamily: fonts.semibold,
     fontSize: 17,
     lineHeight: 22,
     letterSpacing: 0.15,
-    color: colors.white,
+    color: colors.textOnAccent,
   },
   /** Field labels, section kicker, chrome copy. */
   label: {

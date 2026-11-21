@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import Svg, { Circle, Defs, Ellipse, LinearGradient, Path, Stop } from 'react-native-svg';
 
-import { CornerBlobs } from '@/components/decor/CornerBlobs';
 import { colors } from '@/theme/colors';
 
 export type SplashDecorProps = {
@@ -10,90 +9,111 @@ export type SplashDecorProps = {
 };
 
 /**
- * Splash atmosphere: cream sky, sunset glow, layered mountain peaks, and a
- * small hiker silhouette — the bottom-right mockup vibe (no university content).
+ * Splash atmosphere on deep navy: soft gold glow, swoosh ribbons, and a
+ * faint crest watermark — matches the navy / mustard mockup splash beat.
  */
 export function SplashDecor({ width: w, height: h }: SplashDecorProps) {
-  const artW = Math.min(w * 1.05, 420);
-  const artH = Math.min(h * 0.58, artW * 0.78);
-  const artTop = h * 0.38;
+  const crestSize = Math.min(w * 0.92, 360);
+  const crestTop = h * 0.42;
 
   return (
     <View style={styles.layer} pointerEvents="none" importantForAccessibility="no-hide-descendants">
-      <CornerBlobs corners={['topLeft', 'bottomRight']} size={Math.round(w * 0.44)} />
+      {/* Soft mustard glow behind the brand */}
+      <View
+        style={[
+          styles.glow,
+          {
+            top: h * 0.18,
+            left: w * 0.18,
+            width: w * 0.64,
+            height: h * 0.28,
+          },
+        ]}
+      />
 
-      {/* Soft sunset wash behind the peaks */}
-      <View style={[styles.glow, { top: h * 0.28, left: w * 0.12, width: w * 0.76, height: h * 0.32 }]} />
+      {/* Top-right gold swoosh */}
+      <Svg
+        width={w * 0.55}
+        height={h * 0.22}
+        viewBox="0 0 220 120"
+        style={{ position: 'absolute', top: 0, right: 0 }}
+      >
+        <Path
+          d="M40 0 C90 18 140 8 220 36 L220 0 Z"
+          fill={colors.accent}
+          opacity={0.55}
+        />
+        <Path
+          d="M80 0 C120 22 160 14 220 48 L220 0 Z"
+          fill={colors.decor.ochreSoft}
+          opacity={0.35}
+        />
+      </Svg>
 
-      <View style={[styles.heroArt, { top: artTop, width: artW, height: artH, left: (w - artW) / 2 }]}>
-        <Svg width={artW} height={artH} viewBox="0 0 400 280">
+      {/* Bottom-left navy depth + mustard tip */}
+      <Svg
+        width={w * 0.5}
+        height={h * 0.28}
+        viewBox="0 0 200 160"
+        style={{ position: 'absolute', bottom: 0, left: 0 }}
+      >
+        <Path
+          d="M0 160 L0 48 C36 72 70 110 110 160 Z"
+          fill={colors.primarySoft}
+          opacity={0.9}
+        />
+        <Path
+          d="M0 160 L0 88 C28 104 52 128 78 160 Z"
+          fill={colors.accent}
+          opacity={0.45}
+        />
+      </Svg>
+
+      {/* Faint crest watermark */}
+      <View
+        style={[
+          styles.crestWrap,
+          {
+            top: crestTop,
+            width: crestSize,
+            height: crestSize,
+            left: (w - crestSize) / 2,
+          },
+        ]}
+      >
+        <Svg width={crestSize} height={crestSize} viewBox="0 0 200 200">
           <Defs>
-            <LinearGradient id="splashSky" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={colors.accent} stopOpacity="0.42" />
-              <Stop offset="0.4" stopColor={colors.decor.ochreSoft} stopOpacity="0.22" />
-              <Stop offset="1" stopColor={colors.backgroundSoft} stopOpacity="0" />
-            </LinearGradient>
-            <LinearGradient id="splashFar" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={colors.primarySoft} stopOpacity="0.55" />
-              <Stop offset="1" stopColor={colors.primary} stopOpacity="0.75" />
-            </LinearGradient>
-            <LinearGradient id="splashNear" x1="0" y1="0" x2="0.2" y2="1">
-              <Stop offset="0" stopColor={colors.primarySoft} />
-              <Stop offset="1" stopColor={colors.primary} />
+            <LinearGradient id="crestRing" x1="0" y1="0" x2="1" y2="1">
+              <Stop offset="0" stopColor={colors.accent} stopOpacity="0.18" />
+              <Stop offset="1" stopColor={colors.white} stopOpacity="0.06" />
             </LinearGradient>
           </Defs>
-
-          {/* Sun / glow */}
-          <Circle cx="200" cy="88" r="68" fill="url(#splashSky)" />
-          <Circle cx="200" cy="92" r="28" fill={colors.accent} opacity={0.65} />
-          <Circle cx="200" cy="92" r="14" fill={colors.decor.ochreSoft} opacity={0.9} />
-
-          {/* Soft cloud wisps */}
-          <Ellipse cx="72" cy="70" rx="36" ry="14" fill={colors.white} opacity={0.45} />
-          <Ellipse cx="98" cy="66" rx="22" ry="11" fill={colors.tileSurface} opacity={0.5} />
-          <Ellipse cx="320" cy="78" rx="40" ry="15" fill={colors.white} opacity={0.4} />
-          <Ellipse cx="348" cy="74" rx="24" ry="11" fill={colors.accentTint} opacity={0.55} />
-
-          {/* Far ridge */}
-          <Path
-            d="M0 280 L0 190 C40 155 70 140 110 148 C150 156 175 185 210 178 C250 170 280 140 320 150 C355 158 380 185 400 210 L400 280 Z"
-            fill="url(#splashFar)"
-            opacity={0.55}
-          />
-
-          {/* Mid ridge */}
-          <Path
-            d="M0 280 L20 210 C55 175 85 155 125 162 C165 170 185 200 225 192 C270 182 295 150 340 165 C370 175 390 200 400 225 L400 280 Z"
-            fill="url(#splashNear)"
-            opacity={0.82}
-          />
-
-          {/* Near foothill */}
-          <Path
-            d="M0 280 L0 240 C50 220 90 215 140 228 C190 242 220 255 270 248 C320 240 360 230 400 242 L400 280 Z"
-            fill={colors.primary}
-            opacity={0.92}
-          />
-
-          {/* Winding trail */}
-          <Path
-            d="M168 268 C178 248 186 232 198 210 C208 192 214 178 222 158"
+          <Circle
+            cx="100"
+            cy="100"
+            r="78"
             fill="none"
-            stroke={colors.tileSurface}
-            strokeWidth={7}
-            strokeLinecap="round"
-            opacity={0.55}
+            stroke="url(#crestRing)"
+            strokeWidth={2.5}
           />
-
-          {/* Hiker silhouette near the peak */}
+          <Circle
+            cx="100"
+            cy="100"
+            r="62"
+            fill="none"
+            stroke={colors.white}
+            strokeOpacity={0.08}
+            strokeWidth={1.5}
+          />
+          <Ellipse cx="100" cy="86" rx="28" ry="34" fill={colors.white} opacity={0.05} />
           <Path
-            d="M224 152 C224 148 227 145 231 145 C235 145 238 148 238 152 C238 155 236 157 234 158 L236 172 L228 172 L230 158 C228 157 224 155 224 152 Z M228 172 L222 188 L228 188 L232 176 L236 188 L242 188 L236 172 Z"
-            fill={colors.primary}
-            opacity={0.95}
+            d="M72 118 C82 132 118 132 128 118"
+            fill="none"
+            stroke={colors.accent}
+            strokeOpacity={0.16}
+            strokeWidth={3}
+            strokeLinecap="round"
           />
-          {/* Small flag on peak */}
-          <Path d="M222 138 V118" stroke={colors.primary} strokeWidth={2.2} strokeLinecap="round" />
-          <Path d="M222 118 L242 126 L222 134 Z" fill={colors.accent} />
         </Svg>
       </View>
     </View>
@@ -113,9 +133,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 999,
     backgroundColor: colors.accent,
-    opacity: 0.12,
+    opacity: 0.1,
   },
-  heroArt: {
+  crestWrap: {
     position: 'absolute',
   },
 });

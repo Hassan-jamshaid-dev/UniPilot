@@ -27,7 +27,7 @@ const HEIGHT = 56;
 const PRESS_OPACITY = 0.9;
 const PRESS_SCALE = 0.98;
 
-/** Full-width pill button filled with the brand gradient. */
+/** Full-width pill button filled with the mustard brand gradient. */
 export function GradientButton({
   label,
   onPress,

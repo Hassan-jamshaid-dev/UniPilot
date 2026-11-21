@@ -48,7 +48,7 @@ export default function HelpScreen() {
         <StickyBottomButton
           label="Evaluate an opportunity"
           onPress={() => router.push('/evaluate')}
-          trailingIcon={<Ionicons name="arrow-forward" size={18} color={colors.white} />}
+          trailingIcon={<Ionicons name="arrow-forward" size={18} color={colors.textOnAccent} />}
         />
       }
     >

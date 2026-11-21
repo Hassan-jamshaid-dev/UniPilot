@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { colors } from '@/theme/colors';
 
 export type CornerBlobsProps = {
-  /** Which corners get the organic green + orange curves. */
+  /** Which corners get the organic navy + mustard curves. */
   corners?: Array<'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'>;
   /** Scale of each blob cluster (default 140). */
   size?: number;
@@ -13,7 +13,7 @@ export type CornerBlobsProps = {
 
 /**
  * Organic curved corner decorations from the UniPilot mockups —
- * overlapping forest-green and muted-orange fluid shapes.
+ * overlapping navy and mustard fluid shapes.
  */
 export function CornerBlobs({
   corners = ['topLeft', 'bottomRight'],
@@ -67,19 +67,19 @@ function BlobSvg({
       viewBox="0 0 140 140"
       style={{ transform: [{ scaleX: flipX }, { scaleY: flipY }] }}
     >
-      {/* Outer green curve */}
+      {/* Outer navy curve */}
       <Path
         d="M0 0 H92 C78 28 74 52 58 78 C40 106 18 122 0 132 Z"
         fill={colors.decor.forest}
         opacity={0.92}
       />
-      {/* Inner orange accent curve */}
+      {/* Inner mustard accent curve */}
       <Path
         d="M0 0 H48 C42 22 38 40 28 58 C16 80 6 96 0 108 Z"
         fill={colors.decor.ochre}
         opacity={0.95}
       />
-      {/* Soft green overlap tip */}
+      {/* Soft navy overlap tip */}
       <Path
         d="M0 72 C18 70 34 58 44 40 C36 58 22 72 0 78 Z"
         fill={colors.decor.forestSoft}

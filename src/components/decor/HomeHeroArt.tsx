@@ -16,7 +16,7 @@ type HomeHeroArtProps = {
 };
 
 /**
- * Soft mountain, winding path, and flag used on Home — forest/ochre palette.
+ * Soft mountain, winding path, and flag used on Home — navy / mustard palette.
  */
 export function HomeHeroArt({ size = 148 }: HomeHeroArtProps) {
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
@@ -36,40 +36,40 @@ export function HomeHeroArt({ size = 148 }: HomeHeroArtProps) {
     >
       <Defs>
         <LinearGradient id={skyId} x1="0.2" y1="0" x2="0.9" y2="1">
-          <Stop offset="0" stopColor="#E8F0E6" stopOpacity="0.95" />
-          <Stop offset="1" stopColor="#F8E8D8" stopOpacity="0.35" />
+          <Stop offset="0" stopColor={colors.decor.glow} stopOpacity="0.95" />
+          <Stop offset="1" stopColor={colors.accentTint} stopOpacity="0.35" />
         </LinearGradient>
         <LinearGradient id={mountainId} x1="0.15" y1="0.1" x2="0.9" y2="1">
-          <Stop offset="0" stopColor="#0A5C38" />
-          <Stop offset="0.45" stopColor="#004225" />
-          <Stop offset="1" stopColor="#00331C" />
+          <Stop offset="0" stopColor={colors.primarySoft} />
+          <Stop offset="0.45" stopColor={colors.primary} />
+          <Stop offset="1" stopColor="#06101F" />
         </LinearGradient>
         <LinearGradient id={faceId} x1="0" y1="0.2" x2="1" y2="0.9">
-          <Stop offset="0" stopColor="#E4EDE6" stopOpacity="0.7" />
-          <Stop offset="1" stopColor="#C5D4C9" stopOpacity="0" />
+          <Stop offset="0" stopColor={colors.primaryTint} stopOpacity="0.7" />
+          <Stop offset="1" stopColor={colors.purpleBorder} stopOpacity="0" />
         </LinearGradient>
         <LinearGradient id={flagId} x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor={colors.accent} />
-          <Stop offset="1" stopColor="#F0A05A" />
+          <Stop offset="1" stopColor={colors.decor.ochreSoft} />
         </LinearGradient>
         <LinearGradient id={pathId} x1="0" y1="1" x2="0.4" y2="0">
-          <Stop offset="0" stopColor="#FAF8F2" />
-          <Stop offset="1" stopColor="#E4EDE6" />
+          <Stop offset="0" stopColor={colors.tileSurface} />
+          <Stop offset="1" stopColor={colors.primaryTint} />
         </LinearGradient>
       </Defs>
 
       <Circle cx="118" cy="108" r="78" fill={`url(#${skyId})`} />
-      <Circle cx="118" cy="100" r="48" fill="#E4EDE6" opacity="0.55" />
+      <Circle cx="118" cy="100" r="48" fill={colors.primaryTint} opacity="0.55" />
 
-      <Ellipse cx="58" cy="78" rx="26" ry="13" fill="#FAF8F2" opacity="0.95" />
-      <Ellipse cx="78" cy="72" rx="18" ry="11" fill="#FFFFFF" opacity="0.92" />
-      <Ellipse cx="44" cy="82" rx="14" ry="9" fill="#E8F0E6" opacity="0.9" />
-      <Ellipse cx="162" cy="70" rx="22" ry="12" fill="#FFFFFF" opacity="0.95" />
-      <Ellipse cx="146" cy="66" rx="16" ry="10" fill="#F8E8D8" opacity="0.9" />
+      <Ellipse cx="58" cy="78" rx="26" ry="13" fill={colors.tileSurface} opacity="0.95" />
+      <Ellipse cx="78" cy="72" rx="18" ry="11" fill={colors.white} opacity="0.92" />
+      <Ellipse cx="44" cy="82" rx="14" ry="9" fill={colors.decor.glow} opacity="0.9" />
+      <Ellipse cx="162" cy="70" rx="22" ry="12" fill={colors.white} opacity="0.95" />
+      <Ellipse cx="146" cy="66" rx="16" ry="10" fill={colors.accentTint} opacity="0.9" />
 
       <Path
         d="M118 188 C132 148 148 128 168 118 C178 148 186 168 198 188 Z"
-        fill="#0A5C38"
+        fill={colors.primarySoft}
         opacity="0.45"
       />
 
@@ -93,7 +93,7 @@ export function HomeHeroArt({ size = 148 }: HomeHeroArtProps) {
 
       <Path
         d="M122 28 V6"
-        stroke="#004225"
+        stroke={colors.primary}
         strokeWidth="2.6"
         strokeLinecap="round"
       />
