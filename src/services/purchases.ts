@@ -75,7 +75,7 @@ function logExpoGoSkip(): void {
   if (loggedExpoGoSkip) return;
   loggedExpoGoSkip = true;
   console.info(
-    '[Vetly] RevenueCat skipped: Expo Go cannot run native IAP. Use a development build (`npx expo run:android` or `npx expo run:ios`, or an EAS development profile).',
+    '[UniPilot] RevenueCat skipped: Expo Go cannot run native IAP. Use a development build (`npx expo run:android` or `npx expo run:ios`, or an EAS development profile).',
   );
 }
 
@@ -83,7 +83,7 @@ function logMissingKey(): void {
   if (loggedMissingKey) return;
   loggedMissingKey = true;
   console.warn(
-    '[Vetly] RevenueCat skipped: EXPO_PUBLIC_REVENUECAT_API_KEY is empty. Add the Test Store public SDK key to .env (never the secret REST key), then restart Metro.',
+    '[UniPilot] RevenueCat skipped: EXPO_PUBLIC_REVENUECAT_API_KEY is empty. Add the Test Store public SDK key to .env (never the secret REST key), then restart Metro.',
   );
 }
 
@@ -260,7 +260,7 @@ export async function configurePurchases(): Promise<void> {
   } catch (error) {
     configured = false;
     console.warn(
-      '[Vetly] RevenueCat configure failed.',
+      '[UniPilot] RevenueCat configure failed.',
       error instanceof Error ? error.message : 'Unknown error',
     );
   }
@@ -275,7 +275,7 @@ export async function getCustomerInfo(): Promise<CustomerInfo | null> {
     return await native.Purchases.getCustomerInfo();
   } catch (error) {
     console.warn(
-      '[Vetly] RevenueCat getCustomerInfo failed.',
+      '[UniPilot] RevenueCat getCustomerInfo failed.',
       error instanceof Error ? error.message : 'Unknown error',
     );
     return null;
@@ -357,7 +357,7 @@ export async function purchaseSelectedPlan(plan: PremiumPlan): Promise<PurchaseR
   } catch (error) {
     if (isUserCancelled(error)) return 'cancelled';
     console.warn(
-      '[Vetly] RevenueCat purchasePackage failed.',
+      '[UniPilot] RevenueCat purchasePackage failed.',
       error instanceof Error ? error.message : 'Unknown error',
     );
     return 'failed';
@@ -395,7 +395,7 @@ export async function presentDashboardPaywall(): Promise<PurchaseResult> {
   } catch (error) {
     if (isUserCancelled(error)) return 'cancelled';
     console.warn(
-      '[Vetly] RevenueCat presentPaywall failed.',
+      '[UniPilot] RevenueCat presentPaywall failed.',
       error instanceof Error ? error.message : 'Unknown error',
     );
     return 'failed';
@@ -423,7 +423,7 @@ export async function restorePurchases(): Promise<RestoreResult> {
   } catch (error) {
     if (isUserCancelled(error)) return 'none';
     console.warn(
-      '[Vetly] RevenueCat restorePurchases failed.',
+      '[UniPilot] RevenueCat restorePurchases failed.',
       error instanceof Error ? error.message : 'Unknown error',
     );
     return 'failed';
@@ -455,7 +455,7 @@ export async function presentCustomerCenter(): Promise<CustomerCenterResult> {
     return 'dismissed';
   } catch (error) {
     console.warn(
-      '[Vetly] RevenueCat presentCustomerCenter failed.',
+      '[UniPilot] RevenueCat presentCustomerCenter failed.',
       error instanceof Error ? error.message : 'Unknown error',
     );
     return 'failed';

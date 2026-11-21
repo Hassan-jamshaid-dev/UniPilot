@@ -87,7 +87,7 @@ export default function SettingsScreen() {
       const restored = await restorePurchases();
       await refreshPremiumFlag();
       if (restored === 'restored') {
-        showAlert('Purchases restored', 'Vetly Premium is active on this device.');
+        showAlert('Purchases restored', 'UniPilot Premium is active on this device.');
         return;
       }
       if (restored === 'no_key') {
@@ -202,12 +202,12 @@ export default function SettingsScreen() {
         <View style={styles.groupClip}>
           <SettingsRow
             icon="help-circle-outline"
-            label="How to use Vetly"
+            label="How to use UniPilot"
             onPress={() => router.push('/help' as Href)}
           />
           <SettingsRow
             icon="information-circle-outline"
-            label="About Vetly"
+            label="About UniPilot"
             onPress={() => router.push({ pathname: '/legal', params: { page: 'about' } })}
           />
           <SettingsRow
@@ -251,7 +251,7 @@ export default function SettingsScreen() {
       {isPremium === true ? (
         <Text style={styles.footnote}>
           {nativeAvailable
-            ? 'Vetly Premium is on this device.'
+            ? 'UniPilot Premium is on this device.'
             : 'Demo Premium on this device — not a store purchase.'}
         </Text>
       ) : isPremium === false ? (
@@ -277,7 +277,7 @@ export default function SettingsScreen() {
         accessibilityRole="link"
         style={styles.versionWrap}
       >
-        <Text style={styles.version}>Vetly 1.0.0 · know before you go</Text>
+        <Text style={styles.version}>UniPilot 1.0.0 · Plan. Apply. Achieve.</Text>
       </Pressable>
     </ScreenWrapper>
   );

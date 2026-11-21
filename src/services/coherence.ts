@@ -88,7 +88,7 @@ export function analyzeProfileCoherence(
     return {
       status: 'mixed',
       headline: 'Need a few more evaluations to see a pattern.',
-      detail: 'Analyze a couple more opportunities and Vetly will show how they fit together.',
+      detail: 'Analyze a couple more opportunities and UniPilot will show how they fit together.',
     };
   }
 

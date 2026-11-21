@@ -60,7 +60,7 @@ export default function ResumeScreen() {
       if (!permission.granted) {
         showAlert(
           'Photo access needed',
-          'To upload an image of your resume, allow Vetly to access your photos. You can also skip for now.',
+          'To upload an image of your resume, allow UniPilot to access your photos. You can also skip for now.',
         );
         return;
       }

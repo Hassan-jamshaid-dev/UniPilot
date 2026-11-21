@@ -1,6 +1,4 @@
-import MaskedView from '@react-native-masked-view/masked-view';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter, type Href } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
 import {
@@ -9,7 +7,6 @@ import {
   Text,
   View,
   useWindowDimensions,
-  type TextStyle,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -18,6 +15,7 @@ import { GradientButton } from '@/components/GradientButton';
 import { ScreenWrapper } from '@/components/ScreenWrapper';
 import { SoftSkeleton } from '@/components/SoftSkeleton';
 import { VMark } from '@/components/VMark';
+import { CornerBlobs } from '@/components/decor/CornerBlobs';
 import { HomeHeroArt } from '@/components/decor/HomeHeroArt';
 import { fetchRemoteEvaluations } from '@/services/evaluationCloud';
 import { colorForScore } from '@/services/score';
@@ -25,8 +23,10 @@ import { firstNameOf, getAccount, getIsSignedIn } from '@/storage/authStorage';
 import { getHistory, mergeRemoteHistory } from '@/storage/historyStorage';
 import { getDisplayName } from '@/storage/nameStorage';
 import { getIsPremium } from '@/storage/premiumStorage';
+import { FREE_DAILY_LIMIT, getRemainingToday } from '@/storage/usageStorage';
 import { setCurrentEvaluation } from '@/store/evaluationStore';
 import { colors } from '@/theme/colors';
+import { radius } from '@/theme/radius';
 import { fonts, type } from '@/theme/typography';
 import { relativeTime } from '@/utils/relativeTime';
 import type { Evaluation } from '@/types/evaluation';
@@ -50,6 +50,7 @@ export default function HomeScreen() {
   const [hydrated, setHydrated] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState<boolean | null>(null);
+  const [remainingFree, setRemainingFree] = useState<number | null>(null);
   const [recent, setRecent] = useState<Evaluation[]>([]);
   const [recentReady, setRecentReady] = useState(false);
 
@@ -57,15 +58,17 @@ export default function HomeScreen() {
     useCallback(() => {
       let cancelled = false;
       (async () => {
-        const [premium, signedIn, account, localName, history] = await Promise.all([
+        const [premium, signedIn, account, localName, history, remaining] = await Promise.all([
           getIsPremium(),
           getIsSignedIn(),
           getAccount(),
           getDisplayName(),
           getHistory(),
+          getRemainingToday(),
         ]);
         if (cancelled) return;
         setIsPremium(premium);
+        setRemainingFree(remaining);
         const fromAccount = signedIn && account ? firstNameOf(account.name).trim() : '';
         const fromLocal = localName ? firstNameOf(localName).trim() : '';
         setFirstName(fromAccount || fromLocal || null);
@@ -104,15 +107,32 @@ export default function HomeScreen() {
   const showRecentList = isPremium === true && recentReady && recent.length > 0;
   const showEmptyRecent = !showRecentSkeleton && !showRecentList;
 
-  const greetingLine = firstName
-    ? `${greeting}, ${firstName}. 👋`
-    : `${greeting}. 👋`;
+  const usedFree =
+    remainingFree == null ? 0 : Math.max(0, FREE_DAILY_LIMIT - remainingFree);
+  const progressLabel = isPremium
+    ? 'Unlimited evaluations'
+    : `${usedFree} / ${FREE_DAILY_LIMIT}`;
+  const progressSub =
+    isPremium === true
+      ? 'Premium is active'
+      : remainingFree === 0
+        ? 'Free evaluations used today'
+        : 'Free evaluations today';
+  const progressRatio =
+    isPremium === true
+      ? 1
+      : FREE_DAILY_LIMIT <= 0
+        ? 0
+        : Math.min(1, usedFree / FREE_DAILY_LIMIT);
+
+  const greetingLine = firstName ? `Hi, ${firstName}!` : `${greeting}!`;
 
   return (
     <ScreenWrapper
+      background={<CornerBlobs corners={['topLeft', 'bottomRight']} size={Math.round(width * 0.38)} />}
       chrome={
         <View style={styles.headerRow}>
-          <VMark size={32} />
+          <VMark size={36} />
           <View style={styles.headerActions}>
             {isPremium === false ? (
               <Pressable
@@ -122,7 +142,7 @@ export default function HomeScreen() {
                 hitSlop={8}
                 style={({ pressed }) => [styles.upgradeChip, pressed && styles.pressed]}
               >
-                <CrownIcon size={14} color={colors.purple} />
+                <CrownIcon size={14} color={colors.primary} />
                 <Text style={styles.upgradeChipLabel}>Upgrade</Text>
               </Pressable>
             ) : null}
@@ -132,7 +152,7 @@ export default function HomeScreen() {
               accessibilityLabel="Settings"
               style={({ pressed }) => [styles.settingsBtn, pressed && styles.pressed]}
             >
-              <Ionicons name="settings-outline" size={24} color={colors.purple} />
+              <Ionicons name="settings-outline" size={24} color={colors.primary} />
             </Pressable>
           </View>
         </View>
@@ -151,8 +171,8 @@ export default function HomeScreen() {
           ) : (
             <>
               <Text style={styles.hi}>{greetingLine}</Text>
-              <Text style={styles.headline}>Know before</Text>
-              <GradientWords style={styles.headline}>you go.</GradientWords>
+              <Text style={styles.tagline}>Plan. Apply. Achieve.</Text>
+              <View style={styles.accentRule} />
             </>
           )}
         </View>
@@ -160,6 +180,30 @@ export default function HomeScreen() {
           <HomeHeroArt size={artSize} />
         </View>
       </View>
+
+      <Pressable
+        onPress={() =>
+          isPremium === false ? router.push('/paywall') : router.navigate('/(tabs)/history')
+        }
+        accessibilityRole="button"
+        accessibilityLabel="Your evaluation progress"
+        style={({ pressed }) => [pressed && styles.pressed]}
+      >
+        <View style={styles.progressCard}>
+          <View style={styles.progressCopy}>
+            <Text style={styles.progressTitle}>Your evaluation progress</Text>
+            <Text style={styles.progressCount}>{progressLabel}</Text>
+            <Text style={styles.progressSub}>{progressSub}</Text>
+            <View style={styles.progressTrack}>
+              <View style={[styles.progressFill, { width: `${Math.round(progressRatio * 100)}%` }]} />
+            </View>
+          </View>
+          <View style={styles.progressDivider} />
+          <Text style={styles.progressLink}>
+            {isPremium === false ? 'Upgrade →' : 'View All →'}
+          </Text>
+        </View>
+      </Pressable>
 
       <GradientButton
         label="Evaluate an opportunity"
@@ -174,10 +218,10 @@ export default function HomeScreen() {
         accessibilityLabel="Your profile"
         style={({ pressed }) => [pressed && styles.pressed]}
       >
-        <Card radius={20} padding={16}>
+        <Card radius={radius.xl} padding={16}>
           <View style={styles.row}>
             <IconCircle>
-              <Ionicons name="person-outline" size={22} color={colors.purple} />
+              <Ionicons name="person-outline" size={22} color={colors.primary} />
             </IconCircle>
             <View style={styles.rowText}>
               <Text style={styles.rowTitle}>Your profile</Text>
@@ -198,8 +242,7 @@ export default function HomeScreen() {
             hitSlop={8}
             style={({ pressed }) => [styles.viewAll, pressed && styles.pressed]}
           >
-            <Text style={styles.viewAllLabel}>View all</Text>
-            <Ionicons name="chevron-forward" size={14} color={colors.purple} />
+            <Text style={styles.viewAllLabel}>See All →</Text>
           </Pressable>
         </View>
 
@@ -219,13 +262,13 @@ export default function HomeScreen() {
         ) : null}
 
         {showEmptyRecent ? (
-          <Card radius={20} padding={16}>
+          <Card radius={radius.xl} padding={16}>
             <View style={styles.row}>
               <IconCircle>
                 {isPremium === false ? (
-                  <Ionicons name="lock-closed" size={20} color={colors.purple} />
+                  <Ionicons name="lock-closed" size={20} color={colors.primary} />
                 ) : (
-                  <DocStarIcon size={22} color={colors.purple} />
+                  <DocStarIcon size={22} color={colors.primary} />
                 )}
               </IconCircle>
               <View style={styles.rowText}>
@@ -246,13 +289,13 @@ export default function HomeScreen() {
       <Pressable
         onPress={() => router.push('/help' as Href)}
         accessibilityRole="button"
-        accessibilityLabel="Quick tip. How to use Vetly."
+        accessibilityLabel="Quick tip. How to use UniPilot."
         style={({ pressed }) => [styles.tipPress, pressed && styles.pressed]}
       >
-        <Card radius={20} padding={16}>
+        <Card radius={radius.xl} padding={16}>
           <View style={styles.row}>
             <IconCircle>
-              <Ionicons name="bulb-outline" size={22} color={colors.purple} />
+              <Ionicons name="bulb-outline" size={22} color={colors.primary} />
             </IconCircle>
             <View style={styles.rowText}>
               <Text style={styles.rowTitle}>Quick tip</Text>
@@ -279,7 +322,7 @@ function RecentRow({
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={evaluation.title}>
       {({ pressed }) => (
-        <Card radius={20} padding={16} style={pressed ? styles.rowPressed : undefined}>
+        <Card radius={radius.xl} padding={16} style={pressed ? styles.rowPressed : undefined}>
           <View style={styles.row}>
             <View style={styles.rowText}>
               <Text style={styles.rowTitle} numberOfLines={1}>
@@ -300,26 +343,6 @@ function RecentRow({
 
 function IconCircle({ children }: { children: ReactNode }) {
   return <View style={styles.iconCircle}>{children}</View>;
-}
-
-/** Brand-gradient fill on a heading line (same mask pattern as Onboarding). */
-function GradientWords({ children, style }: { children: string; style: TextStyle }) {
-  return (
-    <MaskedView
-      style={styles.gradientLine}
-      maskElement={
-        <Text style={[style, styles.maskText]} maxFontSizeMultiplier={1.2}>
-          {children}
-        </Text>
-      }
-    >
-      <LinearGradient colors={colors.gradient} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }}>
-        <Text style={[style, styles.sizer]} maxFontSizeMultiplier={1.2}>
-          {children}
-        </Text>
-      </LinearGradient>
-    </MaskedView>
-  );
 }
 
 function CrownIcon({ size, color }: { size: number; color: string }) {
@@ -383,7 +406,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 13,
     lineHeight: 18,
-    color: colors.purple,
+    color: colors.primary,
   },
   settingsBtn: {
     width: 44,
@@ -421,28 +444,85 @@ const styles = StyleSheet.create({
     width: '58%',
   },
   hi: {
-    fontFamily: fonts.medium,
+    fontFamily: fonts.serifBold,
+    fontSize: 32,
+    lineHeight: 40,
+    letterSpacing: -0.3,
+    color: colors.primary,
+    marginBottom: 6,
+  },
+  tagline: {
+    fontFamily: fonts.serifRegular,
     fontSize: 16,
     lineHeight: 22,
     color: colors.textSecondary,
-    marginBottom: 8,
   },
-  headline: {
-    fontFamily: fonts.bold,
-    fontSize: 34,
-    lineHeight: 40,
-    letterSpacing: -0.7,
-    color: colors.textPrimary,
-    includeFontPadding: false,
+  accentRule: {
+    marginTop: 10,
+    width: 48,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: colors.accent,
   },
-  gradientLine: {
-    alignSelf: 'flex-start',
+  progressCard: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.xxl,
+    borderCurve: 'continuous',
+    paddingVertical: 18,
+    paddingHorizontal: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
   },
-  maskText: {
-    color: colors.textPrimary,
+  progressCopy: {
+    flex: 1,
+    minWidth: 0,
   },
-  sizer: {
-    opacity: 0,
+  progressTitle: {
+    fontFamily: fonts.medium,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.white,
+    opacity: 0.88,
+  },
+  progressCount: {
+    marginTop: 4,
+    fontFamily: fonts.serifBold,
+    fontSize: 28,
+    lineHeight: 34,
+    color: colors.white,
+  },
+  progressSub: {
+    marginTop: 2,
+    fontFamily: fonts.regular,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.white,
+    opacity: 0.8,
+  },
+  progressTrack: {
+    marginTop: 12,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.whiteAlpha25,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.accent,
+  },
+  progressDivider: {
+    width: StyleSheet.hairlineWidth,
+    alignSelf: 'stretch',
+    backgroundColor: colors.whiteAlpha25,
+  },
+  progressLink: {
+    fontFamily: fonts.semibold,
+    fontSize: 14,
+    lineHeight: 18,
+    color: colors.white,
+    paddingHorizontal: 4,
   },
   row: {
     minHeight: 48,
@@ -480,11 +560,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   sectionHeading: {
-    ...type.label,
-    fontFamily: fonts.semibold,
-    letterSpacing: 0.9,
-    textTransform: 'uppercase',
-    color: colors.tabInactive,
+    fontFamily: fonts.serifBold,
+    fontSize: 20,
+    lineHeight: 26,
+    color: colors.textPrimary,
   },
   viewAll: {
     flexDirection: 'row',
@@ -496,7 +575,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 14,
     lineHeight: 18,
-    color: colors.purple,
+    color: colors.accent,
   },
   recentSection: {
     gap: 12,

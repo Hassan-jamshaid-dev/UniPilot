@@ -12,19 +12,14 @@ export const TAB_ICON_SIZE = 22;
 const ICON_BOX = 24;
 
 type TabBarIconProps = {
-  /** Icon shown when the tab is selected, e.g. "home". */
   filled: IoniconName;
-  /** Icon shown when the tab is not selected, e.g. "home-outline". */
   outline: IoniconName;
   focused: boolean;
-  /** Tint supplied by the tab navigator (string or PlatformColor). */
   color: ColorValue;
   size?: number;
-  /** Small lock badge (History is Premium). */
   locked?: boolean;
 };
 
-/** Swaps between a filled and an outlined Ionicon depending on whether the tab is active. */
 export function TabBarIcon({
   filled,
   outline,
@@ -33,13 +28,8 @@ export function TabBarIcon({
   size = TAB_ICON_SIZE,
   locked = false,
 }: TabBarIconProps) {
-  // Fixed box so filled vs outline glyphs don't shift the tab bar vertically.
   return (
-    <View
-      accessible={false}
-      importantForAccessibility="no"
-      style={styles.iconBox}
-    >
+    <View accessible={false} importantForAccessibility="no" style={styles.iconBox}>
       <Ionicons name={focused ? filled : outline} size={size} color={color as IconColor} />
       {locked ? (
         <View style={styles.lockBadge}>
@@ -56,7 +46,7 @@ type TabBarLabelProps = {
   color: ColorValue;
 };
 
-/** Tab label: medium at rest, semibold when selected, short underline when active. */
+/** Tab label with orange underline when active (mockup accent). */
 export function TabBarLabel({ label, focused, color }: TabBarLabelProps) {
   return (
     <View style={styles.labelCol}>
@@ -67,9 +57,7 @@ export function TabBarLabel({ label, focused, color }: TabBarLabelProps) {
       >
         {label}
       </Text>
-      <View
-        style={[styles.underline, focused ? styles.underlineOn : styles.underlineOff]}
-      />
+      <View style={[styles.underline, focused ? styles.underlineOn : styles.underlineOff]} />
     </View>
   );
 }
@@ -88,7 +76,7 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: colors.purple,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
@@ -116,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   underlineOn: {
-    backgroundColor: colors.purple,
+    backgroundColor: colors.accent,
   },
   underlineOff: {
     backgroundColor: 'transparent',

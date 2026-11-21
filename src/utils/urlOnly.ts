@@ -1,6 +1,6 @@
 /**
  * True when the paste is only a link (no listing text).
- * Vetly never fetches or scores URLs as links.
+ * UniPilot never fetches or scores URLs as links.
  */
 export function isUrlOnlySubmission(text: string): boolean {
   const trimmed = text.trim();
@@ -21,4 +21,4 @@ function looksLikeUrl(value: string): boolean {
 }
 
 export const URL_ONLY_MESSAGE =
-  'Paste the listing text or a screenshot. Vetly does not open or score links.';
+  'Paste the listing text or a screenshot. UniPilot does not open or score links.';

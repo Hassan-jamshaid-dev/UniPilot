@@ -291,7 +291,7 @@ function GuestProfile({
           </Text>
         ) : (
           <Text style={styles.goalEmpty}>
-            Write a short goal so Vetly can evaluate opportunities for you.
+            Write a short goal so UniPilot can evaluate opportunities for you.
           </Text>
         )}
       </Card>

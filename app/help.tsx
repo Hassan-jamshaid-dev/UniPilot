@@ -12,7 +12,7 @@ const STEPS = [
   {
     icon: 'create-outline' as const,
     title: 'Write your goal',
-    body: 'Who you are now and where you want to go. Free: 300–2000 characters. Premium: current activities (up to 5000) and future ambitions (1000–5000) with grade, universities, and career. Vetly scores every opportunity against this.',
+    body: 'Who you are now and where you want to go. Free: 300–2000 characters. Premium: current activities (up to 5000) and future ambitions (1000–5000) with grade, universities, and career. UniPilot scores every opportunity against this.',
   },
   {
     icon: 'sparkles-outline' as const,
@@ -41,7 +41,7 @@ export default function HelpScreen() {
 
   return (
     <ScreenWrapper
-      title="How to use Vetly"
+      title="How to use UniPilot"
       onBack={goBack}
       contentContainerStyle={styles.body}
       footer={
@@ -53,7 +53,7 @@ export default function HelpScreen() {
       }
     >
       <Text style={styles.lede}>
-        Reverse discovery: you bring an opportunity you already found. Vetly tells you if it fits
+        Reverse discovery: you bring an opportunity you already found. UniPilot tells you if it fits
         your goal.
       </Text>
 

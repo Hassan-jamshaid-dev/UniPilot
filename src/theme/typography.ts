@@ -2,9 +2,9 @@ import type { TextStyle } from 'react-native';
 
 import { colors } from './colors';
 
-// Vetly typography. Plus Jakarta Sans is loaded once in app/_layout.tsx via
-// @expo-google-fonts/plus-jakarta-sans. Always reference fonts through this
-// object so a font swap is a one-file change.
+// UniPilot typography. Plus Jakarta Sans (body) + Playfair Display (serif
+// headings) are loaded once in app/_layout.tsx. Always reference fonts through
+// this object so a font swap is a one-file change.
 export const fonts = {
   regular: 'PlusJakartaSans_400Regular',
   medium: 'PlusJakartaSans_500Medium',
@@ -12,6 +12,10 @@ export const fonts = {
   bold: 'PlusJakartaSans_700Bold',
   /** Same face as bold — ExtraBold is not loaded, to keep splash fonts smaller. */
   extrabold: 'PlusJakartaSans_700Bold',
+  /** Classic serif for greetings, section titles, splash wordmark. */
+  serifRegular: 'PlayfairDisplay_400Regular',
+  serifMedium: 'PlayfairDisplay_500Medium',
+  serifBold: 'PlayfairDisplay_700Bold',
 } as const;
 
 const heading = {
@@ -23,24 +27,32 @@ const heading = {
 export const type = {
   display: {
     ...heading,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 34,
     lineHeight: 42,
-    letterSpacing: -0.6,
+    letterSpacing: -0.4,
+  },
+  /** Large serif greeting (e.g. "Hi, Hassan!"). */
+  displaySerif: {
+    ...heading,
+    fontFamily: fonts.serifBold,
+    fontSize: 32,
+    lineHeight: 40,
+    letterSpacing: -0.3,
   },
   h1: {
     ...heading,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 36,
-    letterSpacing: -0.4,
+    letterSpacing: -0.3,
   },
   h2: {
     ...heading,
-    fontFamily: fonts.semibold,
+    fontFamily: fonts.serifBold,
     fontSize: 22,
     lineHeight: 28,
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
   },
   h3: {
     ...heading,

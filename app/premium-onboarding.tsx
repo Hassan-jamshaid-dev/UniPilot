@@ -290,7 +290,7 @@ export default function PremiumOnboardingScreen() {
         <Text style={styles.heading}>{isEdit ? 'Update your profile' : 'Tell us about you'}</Text>
         <Text style={styles.subheading}>
           {isEdit
-            ? 'Grade, career, current activities, and future ambitions used when Vetly evaluates opportunities for you.'
+            ? 'Grade, career, current activities, and future ambitions used when UniPilot evaluates opportunities for you.'
             : 'Grade, career, current activities, and future ambitions — one step at a time. Premium uses this when it evaluates opportunities for you.'}
         </Text>
 
@@ -322,7 +322,7 @@ export default function PremiumOnboardingScreen() {
           icon="school-outline"
           label="Grade Level"
           infoTitle="Grade Level"
-          infoMessage="Your current year in school. Vetly uses this so it does not recommend opportunities that are too early or too late."
+          infoMessage="Your current year in school. UniPilot uses this so it does not recommend opportunities that are too early or too late."
         />
         <Card radius={20} padding={0} style={styles.fieldCard}>
           <Pressable

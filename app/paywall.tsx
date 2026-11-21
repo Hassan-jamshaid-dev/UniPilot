@@ -310,7 +310,7 @@ export default function PaywallScreen() {
 
           <Text style={styles.eyebrow}>Premium</Text>
           <Text style={styles.heading} maxFontSizeMultiplier={1.15}>
-            Know before you go.
+            Plan. Apply. Achieve.
           </Text>
           <Text style={styles.kicker} maxFontSizeMultiplier={1.2}>
             Without a daily cap. Evaluated against your goals.

@@ -240,7 +240,7 @@ export default function EvaluateScreen() {
       if (!permission.granted) {
         showAlert(
           'Photo access needed',
-          'To upload a screenshot, allow Vetly to access your photos in your device Settings.',
+          'To upload a screenshot, allow UniPilot to access your photos in your device Settings.',
         );
         return;
       }

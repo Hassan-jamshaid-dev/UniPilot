@@ -15,7 +15,7 @@ type CardProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-/** A soft white surface with a gentle shadow. Most content on Vetly sits inside one of these. */
+/** A soft white surface with a gentle shadow. Most content on UniPilot sits inside one of these. */
 export function Card({
   children,
   radius = radiusTokens.xl,

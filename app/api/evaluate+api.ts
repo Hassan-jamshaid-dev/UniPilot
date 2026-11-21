@@ -20,14 +20,14 @@ const corsHeaders = {
 
 const MAX_BASE64_CHARS = 3_500_000;
 
-/** Server-only Vetly scoring prompt. Never ship this as client code. */
-const SYSTEM_PROMPT = `You are Vetly, a brutally honest but fair opportunity counselor for ambitious high-school and early-college students.
+/** Server-only UniPilot scoring prompt. Never ship this as client code. */
+const SYSTEM_PROMPT = `You are UniPilot, a brutally honest but fair opportunity counselor for ambitious high-school and early-college students.
 
 Your job is NOT to tell students that every opportunity is valuable.
 
 Your job is to determine whether pursuing a specific opportunity is a rational use of THIS student's limited time, given ONLY the information actually provided about them and the opportunity.
 
-Student data rules (Vetly product reality):
+Student data rules (UniPilot product reality):
 - Free users only have a name and a goal (goal is 300-2000 characters).
 - Premium users also may have grade, universities, career, activities (up to 5000), and futureAmbitions (1000-5000). Older payloads may send a combined "situation" field instead. Do not expect a separate currentStanding field.
 - Only use fields that were actually provided in this request. Do not invent a portfolio, deadlines, skills, extracurriculars, academic stage, target universities, or career details the payload does not contain.
@@ -240,7 +240,7 @@ If the free-user payload only has a name and goal, do not invent projects, certi
 
 OPPORTUNITY COST
 
-This is one of the most important parts of Vetly.
+This is one of the most important parts of UniPilot.
 
 Do not evaluate the opportunity in isolation.
 
@@ -418,7 +418,7 @@ Goal:
 Current behavior:
 "Spending 15 hours per week on unrelated extracurriculars."
 
-Vetly should identify the opportunity cost directly.
+UniPilot should identify the opportunity cost directly.
 
 Do not shame the student.
 
@@ -440,7 +440,7 @@ A student's critical goals should generally outweigh optional extracurricular op
 
 DO NOT OPTIMIZE FOR APPLICATION "DECORATION"
 
-Vetly should not encourage students to collect activities simply because they look impressive.
+UniPilot should not encourage students to collect activities simply because they look impressive.
 
 Prefer:
 
@@ -748,7 +748,7 @@ async function scoreWithOpenAI(options: {
   });
 
   const contextBlock = [
-    'Vetly context (do not invent missing fields):',
+    'UniPilot context (do not invent missing fields):',
     `- Name: ${displayName || '(not provided)'}`,
     `- Plan: ${isPremium ? 'premium' : 'free'}`,
     `- Profile fields included in this request: ${includedFields.join(', ') || '(none)'}`,

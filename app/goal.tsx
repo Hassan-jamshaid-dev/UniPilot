@@ -181,7 +181,7 @@ export default function GoalScreen() {
     >
       <Text style={styles.heading}>{isEdit ? 'Edit your goal' : 'Tell us about yourself'}</Text>
       <Text style={styles.subheading}>
-        Where you are now, and where you want to go. Vetly scores every opportunity against this.
+        Where you are now, and where you want to go. UniPilot scores every opportunity against this.
       </Text>
 
       <Text style={styles.nameLabel}>Your name</Text>

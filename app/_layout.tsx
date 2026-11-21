@@ -1,4 +1,9 @@
 import {
+  PlayfairDisplay_400Regular,
+  PlayfairDisplay_500Medium,
+  PlayfairDisplay_700Bold,
+} from '@expo-google-fonts/playfair-display';
+import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
@@ -39,6 +44,9 @@ export default function RootLayout() {
     [fonts.medium]: PlusJakartaSans_500Medium,
     [fonts.semibold]: PlusJakartaSans_600SemiBold,
     [fonts.bold]: PlusJakartaSans_700Bold,
+    [fonts.serifRegular]: PlayfairDisplay_400Regular,
+    [fonts.serifMedium]: PlayfairDisplay_500Medium,
+    [fonts.serifBold]: PlayfairDisplay_700Bold,
   });
   const ready = fontsLoaded || fontError != null;
 

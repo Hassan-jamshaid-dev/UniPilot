@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
   },
   legalLink: {
     fontFamily: fonts.semibold,
-    color: colors.purple,
+    color: colors.accent,
   },
   pressed: {
     opacity: 0.72,

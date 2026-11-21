@@ -19,7 +19,7 @@ const FADE_OUT_MS = motion.base;
 const BAR_WIDTH = 140;
 const BAR_HEIGHT = 4;
 
-// Screen 1: Splash. Shows the brand briefly, then fades to Onboarding or Home.
+// Screen 1: Splash. Brand beat, then fades to Onboarding or Home.
 // With DEMO flags off, a saved goal skips to Home; otherwise Get Started.
 export default function SplashScreen() {
   const navigation = useNavigation();
@@ -29,11 +29,8 @@ export default function SplashScreen() {
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
-  // Whole-screen opacity, animated 1 -> 0 right before we leave.
   const screenOpacity = useRef(new Animated.Value(1)).current;
-  // Brand block entrance: opacity only (no rise, no spring).
   const brandOpacity = useRef(new Animated.Value(0)).current;
-  // Progress fill slides in from the left over the full splash duration.
   const progress = useRef(new Animated.Value(-BAR_WIDTH)).current;
 
   useEffect(() => {
@@ -60,9 +57,6 @@ export default function SplashScreen() {
     });
     const isSplashRoute = (route: string) => route === '/' || route === '/index';
 
-    // Wait for the timer. Demo reset must NOT run when Splash is only mounted
-    // under another route (web /signup, /paywall, /goal?mode=edit) or it wipes
-    // Premium and the session behind the current screen.
     Promise.all([minimumWait, getGoal()])
       .then(async ([, savedGoal]) => {
         if (cancelled) return;
@@ -81,9 +75,6 @@ export default function SplashScreen() {
         }).start(() => {
           if (cancelled) return;
           if (!isSplashRoute(pathnameRef.current)) return;
-          // Reset the root stack so a restored mid-onboarding route (including
-          // /premium-onboarding) cannot stick across reopen. Never open Premium
-          // setup from Splash — only Get Started → free goal, or Home.
           if (!DEMO_FORCE_FIRST_RUN && !DEMO_ALWAYS_SHOW_ONBOARDING && savedGoal) {
             navigation.reset({
               index: 0,
@@ -116,12 +107,15 @@ export default function SplashScreen() {
       <SplashDecor width={width} height={height} />
 
       <Animated.View style={[styles.brand, { opacity: brandOpacity }]}>
-        <VMark size={128} />
+        <VMark size={112} />
         <Text style={styles.wordmark} maxFontSizeMultiplier={1.2}>
-          Vetly
+          UniPilot
         </Text>
         <Text style={styles.tagline} maxFontSizeMultiplier={1.2}>
-          Know before you go.
+          Plan. Apply. Achieve.
+        </Text>
+        <Text style={styles.quote} maxFontSizeMultiplier={1.2}>
+          Your dreams deserve a plan.
         </Text>
       </Animated.View>
 
@@ -148,23 +142,33 @@ const styles = StyleSheet.create({
   },
   brand: {
     alignItems: 'center',
+    paddingHorizontal: 24,
+    marginBottom: 48,
   },
   wordmark: {
-    // The mark's SVG box has ~13% of empty space below the glyph, so a small
-    // margin here yields a visual gap of roughly 22-30px.
-    marginTop: 4,
-    color: colors.textPrimary,
-    fontFamily: fonts.bold,
-    fontSize: 34,
-    lineHeight: 42,
+    marginTop: 12,
+    color: colors.primary,
+    fontFamily: fonts.serifBold,
+    fontWeight: '700',
+    fontSize: 36,
+    lineHeight: 44,
     letterSpacing: 0.2,
   },
   tagline: {
-    marginTop: 8,
+    marginTop: 10,
     color: colors.textSecondary,
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    lineHeight: 22,
+    fontFamily: fonts.serifRegular,
+    fontSize: 17,
+    lineHeight: 24,
+  },
+  quote: {
+    marginTop: 18,
+    color: colors.accent,
+    fontFamily: fonts.serifRegular,
+    fontStyle: 'italic',
+    fontSize: 18,
+    lineHeight: 26,
+    textAlign: 'center',
   },
   track: {
     position: 'absolute',
