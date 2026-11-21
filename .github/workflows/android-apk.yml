@@ -155,7 +155,7 @@ jobs:
           fi
           echo "path=$APK" >> "$GITHUB_OUTPUT"
           echo "Found APK: $APK ($(du -h "$APK" | cut -f1))"
-          cp "$APK" vetly-preview.apk
+          cp "$APK" unipilot-preview.apk
 
       - name: Publish GitHub Release asset
         env:
@@ -169,8 +169,8 @@ jobs:
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release delete "$TAG" --yes --cleanup-tag=false
           fi
-          gh release create "$TAG" vetly-preview.apk \
-            --title "Vetly Android Preview" \
+          gh release create "$TAG" unipilot-preview.apk \
+            --title "UniPilot Android Preview" \
             --notes "Standalone sideload APK (JS bundled, release + debuggable for RevenueCat Test Store). Not an expo-dev-client build." \
             --latest=false
-          echo "Download: https://github.com/${{ github.repository }}/releases/download/${TAG}/vetly-preview.apk"
+          echo "Download: https://github.com/${{ github.repository }}/releases/download/${TAG}/unipilot-preview.apk"
