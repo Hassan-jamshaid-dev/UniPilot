@@ -126,7 +126,7 @@ export default function ResultsScreen() {
                   accessibilityRole="button"
                   style={({ pressed }) => [styles.helpBtn, pressed && styles.pressed]}
                 >
-                  <Ionicons name="create-outline" size={16} color={colors.purple} />
+                  <Ionicons name="create-outline" size={16} color={colors.primary} />
                   <Text style={styles.helpBtnLabel}>How to fill this form</Text>
                 </Pressable>
               ) : null}
@@ -234,7 +234,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...type.h2,
-    fontFamily: fonts.bold,
     color: colors.textPrimary,
   },
   sourceRow: {
@@ -307,7 +306,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 14,
     lineHeight: 18,
-    color: colors.purple,
+    color: colors.primary,
   },
   again: {
     marginTop: 12,
@@ -324,6 +323,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 15,
     lineHeight: 20,
-    color: colors.purple,
+    color: colors.primary,
   },
 });

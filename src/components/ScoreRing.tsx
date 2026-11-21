@@ -56,7 +56,7 @@ export function ScoreRing({
       <Svg width={size} height={size} accessibilityElementsHidden>
         <Defs>
           <LinearGradient id="vetlyRing" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0" stopColor={colors.purple} />
+            <Stop offset="0" stopColor={colors.primary} />
             <Stop offset="1" stopColor={colors.blue} />
           </LinearGradient>
         </Defs>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   score: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 52,
     lineHeight: 58,
     color: colors.textPrimary,

@@ -22,7 +22,7 @@ export function SettingsRow({ icon, label, onPress, isLast = false }: SettingsRo
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}
     >
       <View style={styles.iconSlot}>
-        <Ionicons name={icon} size={20} color={colors.purple} />
+        <Ionicons name={icon} size={20} color={colors.primary} />
       </View>
       <Text style={styles.label}>{label}</Text>
       <Ionicons name="chevron-forward" size={18} color={colors.chevron} />

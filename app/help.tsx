@@ -61,7 +61,7 @@ export default function HelpScreen() {
         <Card key={step.title} radius={16} style={styles.card}>
           <View style={styles.row}>
             <View style={styles.icon}>
-              <Ionicons name={step.icon} size={18} color={colors.purple} />
+              <Ionicons name={step.icon} size={18} color={colors.primary} />
             </View>
             <View style={styles.copy}>
               <Text style={styles.title}>{step.title}</Text>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   goalLinkLabel: {
     fontFamily: fonts.semibold,
     fontSize: 16,
-    color: colors.purple,
+    color: colors.primary,
   },
   pressed: {
     opacity: 0.6,

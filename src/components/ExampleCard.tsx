@@ -24,10 +24,10 @@ export function ExampleCard({ icon, title, url, onPress }: ExampleCardProps) {
       accessibilityLabel={`Use example: ${title}`}
     >
       {({ pressed }) => (
-        <Card radius={16} padding={16} style={pressed ? styles.pressed : undefined}>
+        <Card radius={28} padding={16} style={pressed ? styles.pressed : undefined}>
           <View style={styles.row}>
             <View style={styles.iconTile}>
-              <Ionicons name={icon} size={20} color={colors.purple} />
+              <Ionicons name={icon} size={20} color={colors.primary} />
             </View>
             <View style={styles.textBlock}>
               <Text style={styles.title} numberOfLines={1}>
@@ -57,9 +57,9 @@ const styles = StyleSheet.create({
   iconTile: {
     width: 44,
     height: 44,
-    borderRadius: 14,
+    borderRadius: 16,
     borderCurve: 'continuous',
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 14,

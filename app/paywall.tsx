@@ -83,7 +83,7 @@ export default function PaywallScreen() {
   }, [nativeAvailable]);
 
   // Web: #root / body stay light from the stack, which shows as a white band under
-  // Restore. Paint the document purple while this screen is mounted.
+  // Restore. Paint the document forest-green while this screen is mounted.
   useEffect(() => {
     if (Platform.OS !== 'web' || typeof document === 'undefined') return;
     const html = document.documentElement;
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginTop: 8,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 32,
     lineHeight: 40,
     letterSpacing: -0.6,
@@ -609,7 +609,7 @@ const styles = StyleSheet.create({
   },
   planPrice: {
     marginTop: 10,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 34,
     lineHeight: 40,
     letterSpacing: -0.8,
@@ -618,7 +618,7 @@ const styles = StyleSheet.create({
   },
   planPriceCompact: {
     marginTop: 8,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 26,
     lineHeight: 32,
     letterSpacing: -0.5,
@@ -657,7 +657,7 @@ const styles = StyleSheet.create({
   },
   noticeBox: {
     marginTop: 12,
-    borderRadius: 14,
+    borderRadius: 20,
     borderCurve: 'continuous',
     paddingVertical: 12,
     paddingHorizontal: 14,

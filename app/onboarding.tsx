@@ -9,14 +9,11 @@ import { VMark } from '@/components/VMark';
 import { colors } from '@/theme/colors';
 import { fonts } from '@/theme/typography';
 
-const MARK_SIZE = 120;
-const HEADING_LINE_HEIGHT = 40;
-
-const TEXT_BLOCK_HEIGHT = HEADING_LINE_HEIGHT * 2 + 16 + 52;
+const MARK_SIZE = 128;
 const CTA_GROUP_HEIGHT = 56 + 8 + 18 + 16 + 20;
 const MIN_TEXT_TO_CTA_GAP = 24;
 
-// Screen 2: Get Started — cream field, organic green/orange shapes, brand CTA.
+// Get Started — top-left mockup: logo, Plan. Apply. Achieve., forest CTA.
 export default function OnboardingScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -24,9 +21,9 @@ export default function OnboardingScreen() {
 
   const bottomPadding = Math.max(24, insets.bottom + 12);
   const topPadding = insets.top;
-  const reserved = TEXT_BLOCK_HEIGHT + MIN_TEXT_TO_CTA_GAP + CTA_GROUP_HEIGHT + bottomPadding + topPadding;
-  const heroHeight = Math.max(MARK_SIZE + 40, Math.min(height * 0.42, height - reserved));
-  const markCenterY = heroHeight * 0.52;
+  const reserved = 120 + MIN_TEXT_TO_CTA_GAP + CTA_GROUP_HEIGHT + bottomPadding + topPadding;
+  const heroHeight = Math.max(MARK_SIZE + 48, Math.min(height * 0.46, height - reserved));
+  const markCenterY = heroHeight * 0.5;
 
   return (
     <View style={styles.screen}>
@@ -52,10 +49,7 @@ export default function OnboardingScreen() {
         <Text style={styles.wordmark} maxFontSizeMultiplier={1.2}>
           UniPilot
         </Text>
-        <Text style={styles.heading} maxFontSizeMultiplier={1.2}>
-          Your AI-powered{'\n'}opportunity companion
-        </Text>
-        <Text style={styles.subtitle} maxFontSizeMultiplier={1.3}>
+        <Text style={styles.tagline} maxFontSizeMultiplier={1.2}>
           Plan. Apply. Achieve.
         </Text>
         <View style={styles.accentRule} />
@@ -106,32 +100,22 @@ const styles = StyleSheet.create({
   wordmark: {
     fontFamily: fonts.serifBold,
     fontWeight: '700',
-    fontSize: 28,
-    lineHeight: 34,
+    fontSize: 30,
+    lineHeight: 36,
     color: colors.primary,
-    marginBottom: 12,
+    marginBottom: 14,
   },
-  heading: {
-    fontFamily: fonts.serifBold,
-    fontWeight: '700',
-    fontSize: 28,
-    lineHeight: HEADING_LINE_HEIGHT,
-    letterSpacing: -0.3,
+  tagline: {
+    fontFamily: fonts.serifRegular,
+    fontSize: 22,
+    lineHeight: 30,
+    letterSpacing: -0.2,
     color: colors.textPrimary,
-    textAlign: 'center',
-    includeFontPadding: false,
-  },
-  subtitle: {
-    marginTop: 14,
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    lineHeight: 24,
-    color: colors.textSecondary,
     textAlign: 'center',
   },
   accentRule: {
-    marginTop: 16,
-    width: 48,
+    marginTop: 14,
+    width: 56,
     height: 3,
     borderRadius: 2,
     backgroundColor: colors.accent,

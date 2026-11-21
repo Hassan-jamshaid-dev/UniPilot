@@ -147,7 +147,7 @@ export default function ResumeScreen() {
 
       <Card style={styles.card}>
         <View style={styles.iconWrap}>
-          <Ionicons name="image-outline" size={28} color={colors.purple} />
+          <Ionicons name="image-outline" size={28} color={colors.primary} />
         </View>
         <Text style={styles.cardTitle}>Resume image</Text>
         <Text style={styles.cardBody}>
@@ -179,7 +179,7 @@ export default function ResumeScreen() {
             accessibilityRole="button"
             style={({ pressed }) => [styles.pickBtn, pressed && styles.pressed]}
           >
-            <Ionicons name="cloud-upload-outline" size={18} color={colors.purple} />
+            <Ionicons name="cloud-upload-outline" size={18} color={colors.primary} />
             <Text style={styles.pickLabel}>Choose image</Text>
           </Pressable>
         )}
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   heading: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 36,
     color: colors.textPrimary,
@@ -213,8 +213,8 @@ const styles = StyleSheet.create({
   iconWrap: {
     width: 56,
     height: 56,
-    borderRadius: 16,
-    backgroundColor: colors.purpleTint,
+    borderRadius: 18,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   pickLabel: {
     fontFamily: fonts.medium,
     fontSize: 15,
-    color: colors.purple,
+    color: colors.primary,
   },
   fileRow: {
     marginTop: 18,
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     backgroundColor: colors.backgroundSoft,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 10,
   },

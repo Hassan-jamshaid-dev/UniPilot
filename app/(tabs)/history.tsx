@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from '@/components/Card';
 import { GradientButton } from '@/components/GradientButton';
 import { SoftSkeleton } from '@/components/SoftSkeleton';
+import { CornerBlobs } from '@/components/decor/CornerBlobs';
 import { analyzeProfileCoherence, type CoherenceResult } from '@/services/coherence';
 import { fetchRemoteEvaluations } from '@/services/evaluationCloud';
 import { colorForScore } from '@/services/score';
@@ -16,6 +17,7 @@ import { getIsPremium } from '@/storage/premiumStorage';
 import { getProfile } from '@/storage/profileStorage';
 import { setCurrentEvaluation } from '@/store/evaluationStore';
 import { colors } from '@/theme/colors';
+import { radius } from '@/theme/radius';
 import { fonts } from '@/theme/typography';
 import { relativeTime } from '@/utils/relativeTime';
 import type { Evaluation } from '@/types/evaluation';
@@ -68,6 +70,7 @@ export default function HistoryScreen() {
   return (
     <View style={styles.screen}>
       <StatusBar style="dark" />
+      <CornerBlobs corners={['topLeft', 'bottomRight']} size={150} />
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <Text style={styles.title}>History</Text>
       </View>
@@ -106,7 +109,7 @@ function LockedState({ onUpgrade }: { onUpgrade: () => void }) {
   return (
     <View style={styles.center}>
       <View style={styles.lockCircle}>
-        <Ionicons name="lock-closed" size={22} color={colors.purple} />
+        <Ionicons name="lock-closed" size={22} color={colors.primary} />
       </View>
       <Text style={styles.heading}>History unlocks with Premium</Text>
       <Text style={styles.body}>Every evaluation saved, plus how your profile is taking shape.</Text>
@@ -136,10 +139,10 @@ function PatternCard({ result, thin }: { result: CoherenceResult; thin: boolean 
         ? 'git-branch-outline'
         : 'shuffle-outline';
   return (
-    <Card radius={16} style={styles.patternCard}>
+    <Card radius={radius.xl} style={styles.patternCard}>
       <View style={styles.patternHeader}>
         <View style={styles.patternIcon}>
-          <Ionicons name={icon} size={16} color={colors.purple} />
+          <Ionicons name={icon} size={16} color={colors.primary} />
         </View>
         <Text style={styles.patternHeadline}>{result.headline}</Text>
       </View>
@@ -165,7 +168,7 @@ function HistoryRow({
       style={styles.rowWrap}
     >
       {({ pressed }) => (
-        <Card radius={16} style={pressed ? styles.rowPressed : undefined}>
+        <Card radius={radius.xl} style={pressed ? styles.rowPressed : undefined}>
           <View style={styles.row}>
             <View style={styles.rowText}>
               <Text style={styles.rowTitle} numberOfLines={1}>
@@ -197,9 +200,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   title: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 36,
+    letterSpacing: -0.3,
     color: colors.textPrimary,
   },
   loading: {
@@ -221,15 +225,15 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
   },
   heading: {
-    fontFamily: fonts.semibold,
-    fontSize: 18,
-    lineHeight: 24,
+    fontFamily: fonts.serifBold,
+    fontSize: 20,
+    lineHeight: 26,
     color: colors.textPrimary,
     textAlign: 'center',
   },
@@ -258,9 +262,9 @@ const styles = StyleSheet.create({
   patternIcon: {
     width: 28,
     height: 28,
-    borderRadius: 8,
+    borderRadius: 10,
     borderCurve: 'continuous',
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },

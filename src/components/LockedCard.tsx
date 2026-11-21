@@ -17,7 +17,7 @@ export function LockedCard({ onUnlock }: LockedCardProps) {
   return (
     <Card padding={24} style={styles.card}>
       <View style={styles.lockCircle}>
-        <Ionicons name="lock-closed" size={20} color={colors.purple} />
+        <Ionicons name="lock-closed" size={20} color={colors.primary} />
       </View>
       <Text style={styles.heading}>What to do</Text>
       <Text style={styles.subtext}>
@@ -38,15 +38,15 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
   heading: {
     marginTop: 16,
-    fontFamily: fonts.bold,
-    fontSize: 17,
-    lineHeight: 22,
+    fontFamily: fonts.serifBold,
+    fontSize: 18,
+    lineHeight: 24,
     color: colors.textPrimary,
     textAlign: 'center',
   },

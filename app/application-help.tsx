@@ -137,7 +137,7 @@ export default function ApplicationHelpScreen() {
               <Card radius={16} style={pressed ? styles.pressed : undefined}>
                 <View style={styles.resumeRow}>
                   <View style={styles.resumeIcon}>
-                    <Ionicons name="document-text-outline" size={20} color={colors.purple} />
+                    <Ionicons name="document-text-outline" size={20} color={colors.primary} />
                   </View>
                   <View style={styles.resumeText}>
                     <Text style={styles.resumeTitle}>Add your resume</Text>
@@ -186,7 +186,7 @@ export default function ApplicationHelpScreen() {
             accessibilityRole="button"
             style={({ pressed }) => [styles.copyBtn, pressed && styles.pressed]}
           >
-            <Ionicons name="copy-outline" size={16} color={colors.purple} />
+            <Ionicons name="copy-outline" size={16} color={colors.primary} />
             <Text style={styles.copyLabel}>Copy</Text>
           </Pressable>
         </Card>
@@ -237,9 +237,10 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   title: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 22,
     lineHeight: 28,
+    letterSpacing: -0.2,
     color: colors.textPrimary,
   },
   lede: {
@@ -252,9 +253,10 @@ const styles = StyleSheet.create({
   sectionHeading: {
     marginTop: 24,
     marginBottom: 12,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 18,
     lineHeight: 24,
+    letterSpacing: -0.2,
     color: colors.textPrimary,
   },
   empty: {
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
   copyLabel: {
     fontFamily: fonts.medium,
     fontSize: 14,
-    color: colors.purple,
+    color: colors.primary,
   },
   pressed: {
     opacity: 0.6,
@@ -311,14 +313,14 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     marginTop: 1,
     marginRight: 12,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
   stepNum: {
     fontFamily: fonts.bold,
     fontSize: 12,
-    color: colors.purple,
+    color: colors.primary,
   },
   bulletText: {
     flex: 1,
@@ -338,8 +340,8 @@ const styles = StyleSheet.create({
   resumeIcon: {
     width: 40,
     height: 40,
-    borderRadius: 12,
-    backgroundColor: colors.purpleTint,
+    borderRadius: 14,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },

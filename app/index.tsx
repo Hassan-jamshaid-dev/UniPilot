@@ -19,8 +19,7 @@ const FADE_OUT_MS = motion.base;
 const BAR_WIDTH = 140;
 const BAR_HEIGHT = 4;
 
-// Screen 1: Splash. Brand beat, then fades to Onboarding or Home.
-// With DEMO flags off, a saved goal skips to Home; otherwise Get Started.
+// Splash — mountain / sunset beat from the mockup, then fades to Get Started or Home.
 export default function SplashScreen() {
   const navigation = useNavigation();
   const pathname = usePathname();
@@ -106,13 +105,18 @@ export default function SplashScreen() {
     <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <SplashDecor width={width} height={height} />
 
-      <Animated.View style={[styles.brand, { opacity: brandOpacity }]}>
-        <VMark size={112} />
+      <Animated.View
+        style={[
+          styles.brand,
+          {
+            opacity: brandOpacity,
+            paddingTop: insets.top + 28,
+          },
+        ]}
+      >
+        <VMark size={96} />
         <Text style={styles.wordmark} maxFontSizeMultiplier={1.2}>
           UniPilot
-        </Text>
-        <Text style={styles.tagline} maxFontSizeMultiplier={1.2}>
-          Plan. Apply. Achieve.
         </Text>
         <Text style={styles.quote} maxFontSizeMultiplier={1.2}>
           Your dreams deserve a plan.
@@ -137,46 +141,40 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.backgroundSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   brand: {
     alignItems: 'center',
-    paddingHorizontal: 24,
-    marginBottom: 48,
+    paddingHorizontal: 28,
+    zIndex: 2,
   },
   wordmark: {
-    marginTop: 12,
+    marginTop: 10,
     color: colors.primary,
     fontFamily: fonts.serifBold,
     fontWeight: '700',
-    fontSize: 36,
-    lineHeight: 44,
+    fontSize: 34,
+    lineHeight: 42,
     letterSpacing: 0.2,
   },
-  tagline: {
-    marginTop: 10,
-    color: colors.textSecondary,
-    fontFamily: fonts.serifRegular,
-    fontSize: 17,
-    lineHeight: 24,
-  },
   quote: {
-    marginTop: 18,
+    marginTop: 16,
     color: colors.accent,
     fontFamily: fonts.serifRegular,
     fontStyle: 'italic',
-    fontSize: 18,
-    lineHeight: 26,
+    fontSize: 20,
+    lineHeight: 28,
     textAlign: 'center',
+    maxWidth: 280,
   },
   track: {
     position: 'absolute',
+    alignSelf: 'center',
     width: BAR_WIDTH,
     height: BAR_HEIGHT,
     borderRadius: BAR_HEIGHT / 2,
     backgroundColor: colors.progressTrack,
     overflow: 'hidden',
+    zIndex: 2,
   },
   fill: {
     width: BAR_WIDTH,

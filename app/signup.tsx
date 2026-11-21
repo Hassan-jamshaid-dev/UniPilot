@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   heading: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 34,
     letterSpacing: -0.4,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
   inputWrap: {
     minHeight: 52,
-    borderRadius: 14,
+    borderRadius: 24,
     borderCurve: 'continuous',
     backgroundColor: colors.white,
     borderWidth: StyleSheet.hairlineWidth,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   },
   social: {
     minHeight: 52,
-    borderRadius: 14,
+    borderRadius: 24,
     borderCurve: 'continuous',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,

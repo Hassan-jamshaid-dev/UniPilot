@@ -7,6 +7,7 @@ import { Card } from '@/components/Card';
 import { GradientButton } from '@/components/GradientButton';
 import { ScreenWrapper } from '@/components/ScreenWrapper';
 import { SoftSkeleton } from '@/components/SoftSkeleton';
+import { CornerBlobs } from '@/components/decor/CornerBlobs';
 import { getAccount, getIsSignedIn, type Account } from '@/storage/authStorage';
 import { getGoal } from '@/storage/goalStorage';
 import { getDisplayName } from '@/storage/nameStorage';
@@ -86,6 +87,7 @@ export default function ProfileScreen() {
 
   return (
     <ScreenWrapper
+      background={<CornerBlobs corners={['topLeft', 'bottomRight']} size={150} />}
       chrome={
         <View style={styles.headerRow}>
           <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
@@ -235,7 +237,7 @@ function FullProfile({
             <Card radius={16} style={pressed ? styles.rowPressed : undefined}>
               <View style={styles.resumeRow}>
                 <View style={styles.resumeIcon}>
-                  <Ionicons name="document-text-outline" size={20} color={colors.purple} />
+                  <Ionicons name="document-text-outline" size={20} color={colors.primary} />
                 </View>
                 <View style={styles.resumeText}>
                   <Text style={styles.resumeLabel}>Resume</Text>
@@ -328,9 +330,10 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 36,
+    letterSpacing: -0.3,
     color: colors.textPrimary,
   },
   iconBtn: {
@@ -360,20 +363,21 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarLetter: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
-    color: colors.purple,
+    color: colors.primary,
   },
   name: {
     marginTop: 12,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 22,
     lineHeight: 28,
+    letterSpacing: -0.2,
     color: colors.textPrimary,
     textAlign: 'center',
   },
@@ -389,7 +393,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
     borderRadius: 22,
     borderCurve: 'continuous',
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     paddingHorizontal: 18,
     flexDirection: 'row',
     alignItems: 'center',
@@ -398,7 +402,7 @@ const styles = StyleSheet.create({
   editPillLabel: {
     fontFamily: fonts.medium,
     fontSize: 14,
-    color: colors.purple,
+    color: colors.primary,
   },
   chips: {
     flexDirection: 'row',
@@ -410,12 +414,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 999,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
   },
   chipLabel: {
     fontFamily: fonts.medium,
     fontSize: 13,
-    color: colors.purple,
+    color: colors.primary,
   },
   block: {
     marginTop: 0,
@@ -459,7 +463,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: colors.purple,
+    backgroundColor: colors.primary,
     opacity: 0.45,
     marginTop: 8,
     marginRight: 12,
@@ -479,9 +483,9 @@ const styles = StyleSheet.create({
   resumeIcon: {
     width: 36,
     height: 36,
-    borderRadius: 10,
+    borderRadius: 12,
     borderCurve: 'continuous',
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -507,7 +511,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
     borderRadius: 22,
     borderCurve: 'continuous',
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
@@ -516,7 +520,7 @@ const styles = StyleSheet.create({
   addResumeLabel: {
     fontFamily: fonts.medium,
     fontSize: 14,
-    color: colors.purple,
+    color: colors.primary,
   },
   guestActions: {
     gap: 4,
@@ -530,6 +534,6 @@ const styles = StyleSheet.create({
   loginLabel: {
     fontFamily: fonts.semibold,
     fontSize: 16,
-    color: colors.purple,
+    color: colors.primary,
   },
 });

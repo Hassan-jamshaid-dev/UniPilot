@@ -68,7 +68,7 @@ function FieldHeader({ icon, label, infoTitle, infoMessage }: FieldHeaderProps) 
   return (
     <View style={styles.fieldHeader}>
       <View style={styles.iconCircle}>
-        <Ionicons name={icon} size={15} color={colors.purple} />
+        <Ionicons name={icon} size={15} color={colors.primary} />
       </View>
       <Text style={styles.fieldLabel}>{label}</Text>
       <Pressable
@@ -362,7 +362,7 @@ export default function PremiumOnboardingScreen() {
                 style={({ pressed }) => [styles.uniChip, pressed && styles.pressed]}
               >
                 <Text style={styles.uniChipLabel}>{uni}</Text>
-                <Ionicons name="close" size={14} color={colors.purple} />
+                <Ionicons name="close" size={14} color={colors.primary} />
               </Pressable>
             ))}
           </View>
@@ -511,7 +511,7 @@ export default function PremiumOnboardingScreen() {
                     <Text style={[styles.gradeOptionLabel, selected && styles.gradeOptionLabelSelected]}>
                       {level}
                     </Text>
-                    {selected ? <Ionicons name="checkmark" size={18} color={colors.purple} /> : null}
+                    {selected ? <Ionicons name="checkmark" size={18} color={colors.primary} /> : null}
                   </Pressable>
                 );
               })}
@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   heading: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 34,
     letterSpacing: -0.4,
@@ -555,7 +555,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -618,14 +618,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     borderRadius: 20,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
   uniChipLabel: {
     fontFamily: fonts.medium,
     fontSize: 13,
-    color: colors.purple,
+    color: colors.primary,
   },
   counter: {
     fontFamily: fonts.medium,
@@ -693,10 +693,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 8,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   gradeOptionSelected: {
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
   },
   gradeOptionLabel: {
     fontFamily: fonts.medium,
@@ -704,7 +704,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   gradeOptionLabelSelected: {
-    color: colors.purple,
+    color: colors.primary,
   },
 });
 

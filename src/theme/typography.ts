@@ -56,7 +56,7 @@ export const type = {
   },
   h3: {
     ...heading,
-    fontFamily: fonts.semibold,
+    fontFamily: fonts.serifBold,
     fontSize: 18,
     lineHeight: 24,
     letterSpacing: -0.2,

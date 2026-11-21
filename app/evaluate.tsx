@@ -329,7 +329,7 @@ export default function EvaluateScreen() {
         {statusCopy ? (
           <Card radius={16} padding={16} style={styles.statusCard}>
             <View style={styles.statusRow}>
-              <ActivityIndicator size="small" color={colors.purple} />
+              <ActivityIndicator size="small" color={colors.primary} />
               <Text style={styles.statusText} accessibilityLiveRegion="polite">
                 {statusCopy}
               </Text>
@@ -350,7 +350,7 @@ export default function EvaluateScreen() {
               pressed && !isAnalyzing && styles.pressed,
             ]}
           >
-            <Ionicons name="image-outline" size={18} color={colors.purple} />
+            <Ionicons name="image-outline" size={18} color={colors.primary} />
             <Text style={styles.pillLabel}>Screenshot</Text>
           </Pressable>
 
@@ -399,7 +399,6 @@ const styles = StyleSheet.create({
   headline: {
     marginTop: 12,
     ...type.h2,
-    fontFamily: fonts.bold,
     color: colors.textPrimary,
   },
   fieldLabel: {
@@ -458,7 +457,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: 14,
     lineHeight: 18,
-    color: colors.purple,
+    color: colors.primary,
   },
   thumbWrap: {
     width: 64,
@@ -467,7 +466,7 @@ const styles = StyleSheet.create({
   thumb: {
     width: 64,
     height: 64,
-    borderRadius: 12,
+    borderRadius: 16,
     borderCurve: 'continuous',
     backgroundColor: colors.backgroundSoft,
   },

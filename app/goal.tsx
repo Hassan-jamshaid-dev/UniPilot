@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   heading: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 28,
     lineHeight: 34,
     letterSpacing: -0.4,

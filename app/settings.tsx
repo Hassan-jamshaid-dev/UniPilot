@@ -299,14 +299,14 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.purpleTint,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarLetter: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.serifBold,
     fontSize: 18,
-    color: colors.purple,
+    color: colors.primary,
   },
   accountText: {
     flex: 1,
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   },
   groupClip: {
     overflow: 'hidden',
-    borderRadius: 16,
+    borderRadius: 22,
     borderCurve: 'continuous',
   },
   sectionLabel: {

@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
-import { type } from '@/theme/typography';
+import { fonts } from '@/theme/typography';
 
 type ScreenHeaderProps = {
   /** Called when the back arrow is pressed. Omit to hide the arrow (side slot stays). */
@@ -77,11 +77,14 @@ const styles = StyleSheet.create({
     opacity: 0.88,
   },
   title: {
-    ...type.button,
     flex: 1,
     minWidth: 0,
     paddingHorizontal: spacing.xs,
     textAlign: 'center',
+    fontFamily: fonts.serifBold,
+    fontSize: 18,
+    lineHeight: 24,
+    letterSpacing: -0.2,
     color: colors.textPrimary,
   },
 });

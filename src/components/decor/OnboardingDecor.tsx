@@ -14,43 +14,44 @@ export type OnboardingDecorProps = {
 };
 
 /**
- * Get Started background: abstract green/orange fluid shapes + corner curves.
+ * Get Started background: organic corner curves + soft glow behind the mark
+ * (top-left mockup — cream field, forest + ochre accents).
  */
 export function OnboardingDecor({ width: w, heroHeight: hh, markCenterY: cy }: OnboardingDecorProps) {
   const cx = w / 2;
 
   return (
-    <View style={[styles.layer, { height: Math.max(hh, cy + 120) }]}>
-      <CornerBlobs corners={['topLeft', 'bottomLeft']} size={Math.round(w * 0.48)} />
+    <View style={[styles.layer, { height: Math.max(hh, cy + 140) }]}>
+      <CornerBlobs corners={['topLeft', 'bottomRight']} size={Math.round(w * 0.55)} />
 
       <Blob
-        cx={0.08 * w}
-        cy={0.18 * hh}
-        width={0.7 * w}
-        height={0.55 * w}
-        rotate={-28}
-        opacity={0.55}
+        cx={0.06 * w}
+        cy={0.22 * hh}
+        width={0.55 * w}
+        height={0.48 * w}
+        rotate={-32}
+        opacity={0.4}
         color={colors.decor.forest}
       />
       <Blob
-        cx={0.02 * w}
-        cy={0.28 * hh}
-        width={0.42 * w}
-        height={0.38 * w}
-        rotate={12}
-        opacity={0.85}
+        cx={0.0 * w}
+        cy={0.32 * hh}
+        width={0.38 * w}
+        height={0.34 * w}
+        rotate={8}
+        opacity={0.8}
         color={colors.decor.ochre}
       />
       <Blob
-        cx={1.05 * w}
-        cy={0.42 * hh}
-        width={0.55 * w}
-        height={0.7 * w}
-        rotate={-18}
-        opacity={0.35}
+        cx={1.08 * w}
+        cy={0.55 * hh}
+        width={0.5 * w}
+        height={0.62 * w}
+        rotate={-12}
+        opacity={0.28}
         color={colors.decor.forestSoft}
       />
-      <Blob cx={cx} cy={cy} width={0.75 * w} color={colors.decor.glow} opacity={0.7} />
+      <Blob cx={cx} cy={cy} width={0.78 * w} color={colors.decor.glow} opacity={0.75} />
     </View>
   );
 }
