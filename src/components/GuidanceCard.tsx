@@ -1,0 +1,38 @@
+import { StyleSheet, Text } from 'react-native';
+
+import { Card } from '@/components/Card';
+import { fonts, type } from '@/theme/typography';
+
+type GuidanceCardProps = {
+  guidance: string;
+};
+
+/** Unlocked “what to do” guidance on Results (Premium). */
+export function GuidanceCard({ guidance }: GuidanceCardProps) {
+  const body = guidance.trim();
+  if (!body) return null;
+
+  return (
+    <Card padding={24}>
+      <Text style={styles.kicker}>What to do</Text>
+      <Text style={styles.body} selectable>
+        {body}
+      </Text>
+    </Card>
+  );
+}
+
+const styles = StyleSheet.create({
+  kicker: {
+    ...type.label,
+    fontFamily: fonts.semibold,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  body: {
+    ...type.body,
+    marginTop: 12,
+    // Long paragraphs must wrap; never clip mid-sentence.
+    flexShrink: 1,
+  },
+});

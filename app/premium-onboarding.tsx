@@ -1,0 +1,727 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Keyboard,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { Card } from '@/components/Card';
+import { MultilineField } from '@/components/MultilineField';
+import { ScreenWrapper } from '@/components/ScreenWrapper';
+import { StickyBottomButton } from '@/components/StickyBottomButton';
+import { VMark } from '@/components/VMark';
+import { Blob } from '@/components/decor/Blob';
+import { useScrollFocusedInput } from '@/hooks/useScrollFocusedInput';
+import { firstQueryParam } from '@/navigation/queryParam';
+import { setGoal } from '@/storage/goalStorage';
+import { getDisplayName, setDisplayName } from '@/storage/nameStorage';
+import { getIsPremium } from '@/storage/premiumStorage';
+import {
+  getProfile,
+  profileToGoalText,
+  setProfile,
+  type StudentProfile,
+} from '@/storage/profileStorage';
+import { colors } from '@/theme/colors';
+import { fonts } from '@/theme/typography';
+import { showAlert } from '@/utils/dialog';
+
+const GRADE_LEVELS = [
+  'Grade 9',
+  'Grade 10',
+  'Grade 11',
+  'Grade 12',
+  'Uni 1',
+  'Uni 2',
+  'Uni 3',
+  'Uni 4',
+  'Other',
+] as const;
+
+/** Current Activities: up to 5000 characters (no separate standing essay). */
+const ACTIVITIES_MAX = 5000;
+/** Future Ambitions: 1000–5000 characters. */
+const NARRATIVE_MIN = 1000;
+const NARRATIVE_MAX = 5000;
+const CAREER_MAX = 80;
+const UNI_NAME_MAX = 80;
+const UNI_CHIP_MAX = 8;
+const NAME_MAX = 80;
+
+type FieldHeaderProps = {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  infoTitle: string;
+  infoMessage: string;
+};
+
+function FieldHeader({ icon, label, infoTitle, infoMessage }: FieldHeaderProps) {
+  return (
+    <View style={styles.fieldHeader}>
+      <View style={styles.iconCircle}>
+        <Ionicons name={icon} size={15} color={colors.purple} />
+      </View>
+      <Text style={styles.fieldLabel}>{label}</Text>
+      <Pressable
+        onPress={() => showAlert(infoTitle, infoMessage)}
+        hitSlop={10}
+        accessibilityRole="button"
+        accessibilityLabel={`${label} info`}
+      >
+        <Ionicons name="information-circle-outline" size={16} color={colors.tabInactive} />
+      </Pressable>
+    </View>
+  );
+}
+
+function ProfileDecor({ width, height }: { width: number; height: number }) {
+  return (
+    <View pointerEvents="none" style={StyleSheet.absoluteFill} accessibilityElementsHidden>
+      <Blob
+        cx={width * 0.92}
+        cy={height * 0.08}
+        width={width * 0.62}
+        height={width * 0.42}
+        color={colors.decor.lavender}
+        opacity={0.22}
+      />
+      <Blob
+        cx={width * 0.08}
+        cy={height * 0.38}
+        width={width * 0.48}
+        color={colors.decor.periwinkle}
+        opacity={0.16}
+      />
+      <Blob
+        cx={width * 0.94}
+        cy={height * 0.7}
+        width={width * 0.5}
+        height={width * 0.38}
+        color={colors.decor.ice}
+        opacity={0.18}
+      />
+    </View>
+  );
+}
+
+function narrativeState(value: string) {
+  const len = value.length;
+  const trimmed = value.trim().length;
+  return {
+    len,
+    trimmed,
+    over: trimmed > NARRATIVE_MAX,
+    under: trimmed < NARRATIVE_MIN,
+    ok: trimmed >= NARRATIVE_MIN && trimmed <= NARRATIVE_MAX,
+  };
+}
+
+// Screen B: one scrollable "full profile" form. Universities are optional;
+// everything else is required so Analyze has something real to work with.
+export default function PremiumOnboardingScreen() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
+  const { mode } = useLocalSearchParams<{ mode?: string | string[] }>();
+  const isEdit = firstQueryParam(mode) === 'edit';
+
+  const [displayName, setDisplayNameState] = useState('');
+  const [gradeLevel, setGradeLevel] = useState('');
+  const [gradeOpen, setGradeOpen] = useState(false);
+  const [universities, setUniversities] = useState<string[]>([]);
+  const [uniDraft, setUniDraft] = useState('');
+  const [dreamCareer, setDreamCareer] = useState('');
+  const [activities, setActivities] = useState('');
+  const [futureAmbitions, setFutureAmbitions] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [allowed, setAllowed] = useState(false);
+  const savingRef = useRef(false);
+  const scrollRef = useRef<ScrollView>(null);
+  const ambitionsRef = useRef<TextInput>(null);
+  const { onScroll, onInputFocus, ensureVisible, keyboardPad } =
+    useScrollFocusedInput(scrollRef);
+
+  // Non-premium users must never stay here — including Android restoring a
+  // stale stack after they quit mid free onboarding. Send them to Get Started.
+  useEffect(() => {
+    let cancelled = false;
+    getIsPremium().then((premium) => {
+      if (cancelled) return;
+      if (!premium) {
+        router.replace('/onboarding');
+        return;
+      }
+      setAllowed(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
+  // Coming back from Resume should not wipe what they already typed.
+  useEffect(() => {
+    if (!allowed) return;
+    let cancelled = false;
+    Promise.all([getProfile(), getDisplayName()]).then(([saved, savedName]) => {
+      if (cancelled) return;
+      if (savedName) setDisplayNameState(savedName);
+      if (!saved) return;
+      setGradeLevel(saved.gradeLevel);
+      setUniversities(mergeUniversityNames([], saved.universities.join(',')));
+      setDreamCareer(saved.dreamCareer.slice(0, CAREER_MAX));
+      setActivities(saved.activities.slice(0, ACTIVITIES_MAX));
+      setFutureAmbitions(saved.futureAmbitions.slice(0, NARRATIVE_MAX));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [allowed]);
+
+  const ambitions = narrativeState(futureAmbitions);
+  const activitiesLen = activities.length;
+  const canContinue =
+    displayName.trim().length > 0 &&
+    gradeLevel.length > 0 &&
+    dreamCareer.trim().length > 0 &&
+    activities.trim().length > 0 &&
+    activities.trim().length <= ACTIVITIES_MAX &&
+    ambitions.ok &&
+    !saving;
+
+  const addUniversities = (raw: string) => {
+    setUniversities((current) => mergeUniversityNames(current, raw));
+    setUniDraft('');
+  };
+
+  const handleUniChange = (value: string) => {
+    if (value.includes(',')) {
+      addUniversities(value);
+      return;
+    }
+    setUniDraft(value.slice(0, UNI_NAME_MAX));
+  };
+
+  const removeUniversity = (name: string) => {
+    setUniversities((current) => current.filter((item) => item !== name));
+  };
+
+  const handleContinue = async () => {
+    if (savingRef.current || !canContinue) return;
+    savingRef.current = true;
+    setSaving(true);
+    Keyboard.dismiss();
+    try {
+      const nextUniversities = mergeUniversityNames(universities, uniDraft);
+      setUniversities(nextUniversities);
+      setUniDraft('');
+      const existing = await getProfile();
+      const profile: StudentProfile = {
+        gradeLevel,
+        universities: nextUniversities,
+        dreamCareer: dreamCareer.trim().slice(0, CAREER_MAX),
+        activities: activities.trim().slice(0, ACTIVITIES_MAX),
+        futureAmbitions: futureAmbitions.trim(),
+        situation: '',
+        resumeUri: existing?.resumeUri ?? null,
+        resumeName: existing?.resumeName ?? null,
+      };
+      await setProfile(profile);
+      await setDisplayName(displayName.trim());
+      // Keep Analyze goal in sync with activities + future ambitions.
+      await setGoal(profileToGoalText(profile));
+      // Editing from Profile should land back on the person page, not Resume.
+      if (isEdit) {
+        if (router.canGoBack()) router.back();
+        else router.replace('/(tabs)/profile');
+        return;
+      }
+      router.replace('/resume');
+    } catch {
+      // Storage failed; let the user try again.
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
+    }
+  };
+
+  const goBack = () => {
+    if (router.canGoBack()) router.back();
+    else router.replace('/(tabs)/home');
+  };
+
+  if (!allowed) {
+    return <View style={{ flex: 1, backgroundColor: colors.backgroundSoft }} />;
+  }
+
+  return (
+    <>
+      <ScreenWrapper
+        keyboard
+        onBack={goBack}
+        headerRight={<VMark size={22} />}
+        background={<ProfileDecor width={width} height={height} />}
+        scrollRef={scrollRef}
+        onScroll={onScroll}
+        contentContainerStyle={[styles.body, { paddingBottom: 12 + keyboardPad }]}
+        footer={
+          <StickyBottomButton
+            label={saving ? 'Saving...' : isEdit ? 'Save' : 'Continue'}
+            onPress={() => {
+              void handleContinue();
+            }}
+            disabled={!canContinue}
+            trailingIcon={
+              saving || isEdit ? undefined : (
+                <Ionicons name="arrow-forward" size={18} color={colors.white} />
+              )
+            }
+          />
+        }
+      >
+        <Text style={styles.heading}>{isEdit ? 'Update your profile' : 'Tell us about you'}</Text>
+        <Text style={styles.subheading}>
+          {isEdit
+            ? 'Grade, career, current activities, and future ambitions used when Vetly evaluates opportunities for you.'
+            : 'Grade, career, current activities, and future ambitions — one step at a time. Premium uses this when it evaluates opportunities for you.'}
+        </Text>
+
+        <FieldHeader
+          icon="person-outline"
+          label="Your Name"
+          infoTitle="Your Name"
+          infoMessage="Shown on your profile on this device. No account required."
+        />
+        <Card radius={20} padding={0} style={styles.fieldCard}>
+          <View style={styles.inputRow}>
+            <Ionicons name="person-outline" size={18} color={colors.placeholder} />
+            <TextInput
+              value={displayName}
+              onChangeText={(value) => setDisplayNameState(value.slice(0, NAME_MAX))}
+              placeholder="First name or nickname"
+              placeholderTextColor={colors.placeholder}
+              autoCapitalize="words"
+              autoCorrect={false}
+              maxLength={NAME_MAX}
+              onFocus={(event) => onInputFocus(event.target as unknown as TextInput)}
+              style={styles.singleInput}
+              accessibilityLabel="Your name"
+            />
+          </View>
+        </Card>
+
+        <FieldHeader
+          icon="school-outline"
+          label="Grade Level"
+          infoTitle="Grade Level"
+          infoMessage="Your current year in school. Vetly uses this so it does not recommend opportunities that are too early or too late."
+        />
+        <Card radius={20} padding={0} style={styles.fieldCard}>
+          <Pressable
+            onPress={() => {
+              Keyboard.dismiss();
+              setGradeOpen(true);
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Grade level"
+            accessibilityState={{ expanded: gradeOpen }}
+            style={({ pressed }) => [styles.selectRow, pressed && styles.pressed]}
+          >
+            <Text
+              style={gradeLevel ? styles.inputValue : styles.placeholder}
+              numberOfLines={1}
+            >
+              {gradeLevel || 'Select your grade'}
+            </Text>
+            <Ionicons name="chevron-down" size={18} color={colors.chevron} />
+          </Pressable>
+        </Card>
+
+        <FieldHeader
+          icon="business-outline"
+          label="Target Universities"
+          infoTitle="Target Universities"
+          infoMessage="Optional. Add schools you care about so Premium can aim evaluations at those programs. Type a name, then comma or return."
+        />
+        {universities.length > 0 ? (
+          <View style={styles.chips}>
+            {universities.map((uni) => (
+              <Pressable
+                key={uni}
+                onPress={() => removeUniversity(uni)}
+                accessibilityRole="button"
+                accessibilityLabel={`Remove ${uni}`}
+                style={({ pressed }) => [styles.uniChip, pressed && styles.pressed]}
+              >
+                <Text style={styles.uniChipLabel}>{uni}</Text>
+                <Ionicons name="close" size={14} color={colors.purple} />
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
+        <Card radius={20} padding={0} style={styles.fieldCard}>
+          <View style={styles.inputRow}>
+            <Ionicons name="search-outline" size={18} color={colors.placeholder} />
+            <TextInput
+              value={uniDraft}
+              onChangeText={handleUniChange}
+              onSubmitEditing={() => addUniversities(uniDraft)}
+              placeholder="Type a school, then comma or return"
+              placeholderTextColor={colors.placeholder}
+              autoCapitalize="words"
+              returnKeyType="done"
+              maxLength={UNI_NAME_MAX}
+              onFocus={(event) => onInputFocus(event.target as unknown as TextInput)}
+              style={styles.singleInput}
+              accessibilityLabel="Add a target university"
+            />
+          </View>
+        </Card>
+
+        <FieldHeader
+          icon="briefcase-outline"
+          label="Dream Career"
+          infoTitle="Dream Career"
+          infoMessage="The role, field, or company you want to build toward. Premium uses this when it evaluates an opportunity."
+        />
+        <Card radius={20} padding={0} style={styles.fieldCard}>
+          <View style={styles.inputRow}>
+            <Ionicons name="attach-outline" size={18} color={colors.placeholder} />
+            <TextInput
+              value={dreamCareer}
+              onChangeText={(value) => setDreamCareer(value.slice(0, CAREER_MAX))}
+              placeholder="e.g. Computer engineer, founder,"
+              placeholderTextColor={colors.placeholder}
+              autoCapitalize="sentences"
+              maxLength={CAREER_MAX}
+              onFocus={(event) => onInputFocus(event.target as unknown as TextInput)}
+              style={styles.singleInput}
+              accessibilityLabel="Dream career"
+            />
+          </View>
+        </Card>
+
+        <FieldHeader
+          icon="star-outline"
+          label="Current Activities"
+          infoTitle="Current Activities"
+          infoMessage="Clubs, internships, projects, sports, skills, and other things you are doing now — up to 5000 characters."
+        />
+        <MultilineField
+          value={activities}
+          onChangeText={(value) => setActivities(value.slice(0, ACTIVITIES_MAX))}
+          maxLength={ACTIVITIES_MAX}
+          minHeight={120}
+          placeholder="Clubs, internships, projects, sports…"
+          accessibilityLabel="Current activities"
+          onFocus={(event) => onInputFocus(event.target as unknown as TextInput)}
+          counter={`${activitiesLen}/${ACTIVITIES_MAX}`}
+        />
+
+        <FieldHeader
+          icon="rocket-outline"
+          label="Future Ambitions"
+          infoTitle="Future Ambitions"
+          infoMessage="Where you want to go next — universities, career, milestones, and the story you are trying to build. 1000–5000 characters."
+        />
+        <Text style={styles.limitCaption}>
+          {NARRATIVE_MIN}–{NARRATIVE_MAX} characters
+        </Text>
+        <MultilineField
+          ref={ambitionsRef}
+          value={futureAmbitions}
+          onChangeText={(value) => setFutureAmbitions(value.slice(0, NARRATIVE_MAX))}
+          maxLength={NARRATIVE_MAX}
+          minHeight={140}
+          placeholder="Where you want to go: target schools, career path, milestones, and what success looks like for you."
+          accessibilityLabel="Future ambitions"
+          onFocus={() => onInputFocus(ambitionsRef.current)}
+          onContentSizeChange={() => ensureVisible(ambitionsRef.current)}
+          hint={
+            ambitions.over
+              ? `Please trim to ${NARRATIVE_MAX} characters.`
+              : ambitions.len > 0 && ambitions.under
+                ? `At least ${NARRATIVE_MIN} characters.`
+                : undefined
+          }
+          counter={
+            <Text
+              style={[
+                styles.counter,
+                ambitions.over
+                  ? styles.counterError
+                  : ambitions.ok
+                    ? styles.counterOk
+                    : styles.counterMuted,
+              ]}
+            >
+              {ambitions.len}/{NARRATIVE_MAX}
+            </Text>
+          }
+        />
+      </ScreenWrapper>
+
+      <Modal
+        visible={gradeOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setGradeOpen(false)}
+      >
+        <View style={styles.modalRoot}>
+          <Pressable
+            style={styles.modalBackdrop}
+            onPress={() => setGradeOpen(false)}
+            accessibilityRole="button"
+            accessibilityLabel="Close grade picker"
+          />
+          <View style={[styles.gradeSheet, { paddingBottom: Math.max(insets.bottom, 20) }]}>
+            <View style={styles.sheetHandle} />
+            <Text style={styles.gradeSheetTitle} numberOfLines={1} ellipsizeMode="tail">
+              Select your grade
+            </Text>
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
+              {GRADE_LEVELS.map((level) => {
+                const selected = gradeLevel === level;
+                return (
+                  <Pressable
+                    key={level}
+                    onPress={() => {
+                      setGradeLevel(level);
+                      setGradeOpen(false);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected }}
+                    style={({ pressed }) => [
+                      styles.gradeOption,
+                      selected && styles.gradeOptionSelected,
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Text style={[styles.gradeOptionLabel, selected && styles.gradeOptionLabelSelected]}>
+                      {level}
+                    </Text>
+                    {selected ? <Ionicons name="checkmark" size={18} color={colors.purple} /> : null}
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  body: {
+    paddingHorizontal: 24,
+    paddingTop: 8,
+    paddingBottom: 12,
+  },
+  heading: {
+    fontFamily: fonts.bold,
+    fontSize: 28,
+    lineHeight: 34,
+    letterSpacing: -0.4,
+    color: colors.textPrimary,
+  },
+  subheading: {
+    marginTop: 8,
+    marginBottom: 4,
+    fontFamily: fonts.regular,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.textSecondary,
+  },
+  fieldHeader: {
+    marginTop: 24,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  iconCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: colors.purpleTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fieldLabel: {
+    flexShrink: 1,
+    fontFamily: fonts.semibold,
+    fontSize: 15,
+    lineHeight: 20,
+    color: colors.textPrimary,
+  },
+  fieldCard: {
+    marginTop: 0,
+    overflow: 'hidden',
+  },
+  selectRow: {
+    minHeight: 52,
+    paddingHorizontal: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  inputRow: {
+    minHeight: 52,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  inputValue: {
+    flex: 1,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    lineHeight: 22,
+    color: colors.textPrimary,
+  },
+  placeholder: {
+    flex: 1,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    lineHeight: 22,
+    color: colors.placeholder,
+  },
+  singleInput: {
+    flex: 1,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    lineHeight: 22,
+    color: colors.textPrimary,
+    paddingVertical: 14,
+  },
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 10,
+  },
+  uniChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    borderRadius: 20,
+    backgroundColor: colors.purpleTint,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  uniChipLabel: {
+    fontFamily: fonts.medium,
+    fontSize: 13,
+    color: colors.purple,
+  },
+  counter: {
+    fontFamily: fonts.medium,
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.muted,
+    fontVariant: ['tabular-nums'],
+  },
+  counterMuted: {
+    color: colors.muted,
+  },
+  counterOk: {
+    color: colors.success,
+  },
+  counterError: {
+    color: colors.danger,
+  },
+  limitCaption: {
+    marginBottom: 10,
+    marginLeft: 2,
+    fontFamily: fonts.medium,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.textSecondary,
+    fontVariant: ['tabular-nums'],
+  },
+  pressed: {
+    opacity: 0.72,
+  },
+  modalRoot: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: colors.scrim,
+  },
+  gradeSheet: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    borderCurve: 'continuous',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    maxHeight: '85%',
+  },
+  sheetHandle: {
+    alignSelf: 'center',
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.hairline,
+    marginBottom: 14,
+  },
+  gradeSheetTitle: {
+    marginBottom: 8,
+    paddingHorizontal: 8,
+    fontFamily: fonts.semibold,
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  gradeOption: {
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    borderRadius: 12,
+  },
+  gradeOptionSelected: {
+    backgroundColor: colors.purpleTint,
+  },
+  gradeOptionLabel: {
+    fontFamily: fonts.medium,
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  gradeOptionLabelSelected: {
+    color: colors.purple,
+  },
+});
+
+function mergeUniversityNames(current: string[], raw: string): string[] {
+  const parts = raw
+    .split(',')
+    .map((part) => part.trim().slice(0, UNI_NAME_MAX))
+    .filter(Boolean);
+  const next = current
+    .map((item) => item.trim().slice(0, UNI_NAME_MAX))
+    .filter(Boolean)
+    .slice(0, UNI_CHIP_MAX);
+  if (parts.length === 0) return next;
+  for (const part of parts) {
+    if (next.length >= UNI_CHIP_MAX) break;
+    const exists = next.some((item) => item.toLowerCase() === part.toLowerCase());
+    if (!exists) next.push(part);
+  }
+  return next;
+}

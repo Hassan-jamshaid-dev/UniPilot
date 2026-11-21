@@ -1,0 +1,329 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
+import { Animated, Easing, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { AnalysisList } from '@/components/AnalysisList';
+import { Card } from '@/components/Card';
+import { GuidanceCard } from '@/components/GuidanceCard';
+import { InsightRow } from '@/components/InsightRow';
+import { LockedCard } from '@/components/LockedCard';
+import { ScoreRing } from '@/components/ScoreRing';
+import { ScreenWrapper } from '@/components/ScreenWrapper';
+import { SoftSkeleton } from '@/components/SoftSkeleton';
+import { colorForScore } from '@/services/score';
+import { getIsPremium } from '@/storage/premiumStorage';
+import { getCurrentEvaluation, wasOpenedFromEvaluate } from '@/store/evaluationStore';
+import { colors } from '@/theme/colors';
+import { fonts, type } from '@/theme/typography';
+import type { Evaluation } from '@/types/evaluation';
+
+// Screen 5: Results. Decision → score → why → helps → downsides → what to do.
+// Analysis is the star; free sees the analysis, Premium unlocks “what to do”.
+// No “what it doesn’t help with” / doesNotFill section.
+export default function ResultsScreen() {
+  const router = useRouter();
+
+  // Re-read on focus so a recycled Results screen picks up a new evaluation,
+  // and an empty store (deep link / hot reload) cannot sit as a blank dead end.
+  const [evaluation, setEvaluation] = useState<Evaluation | null>(() => getCurrentEvaluation());
+  const [isPremium, setIsPremium] = useState<boolean | null>(null);
+
+  const goBack = () => {
+    if (router.canGoBack()) router.back();
+    else router.replace('/(tabs)/home');
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      let cancelled = false;
+      const current = getCurrentEvaluation();
+      setEvaluation(current);
+      if (!current) {
+        router.replace('/(tabs)/home');
+        return;
+      }
+      getIsPremium().then((value) => {
+        if (!cancelled) setIsPremium(value);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }, [router]),
+  );
+
+  if (!evaluation) {
+    return (
+      <ScreenWrapper title="Results" onBack={goBack} contentContainerStyle={styles.content}>
+        <SoftSkeleton height={28} style={styles.titleSkeleton} />
+        <SoftSkeleton height={16} style={styles.sourceSkeleton} />
+        <SoftSkeleton height={248} style={styles.scoreSkeleton} />
+        <SoftSkeleton height={160} style={styles.blockSkeleton} />
+      </ScreenWrapper>
+    );
+  }
+
+  const scoreColor = colorForScore(evaluation.score);
+  // Keep the short top insights only (helps / gap / note) — cap at 4 lines.
+  const whyInsights = evaluation.insights
+    .filter((item) => item.text.trim().length > 0)
+    .slice(0, 4);
+  // Helps = how it helps + gaps it fills (dedupe by trimmed text).
+  const helpsAll = uniqueLines([...evaluation.helps, ...evaluation.fills]);
+  const downsidesAll = uniqueLines(evaluation.hurts);
+  const { helps: helpsCap, hurts: hurtsCap } = scoreBandCaps(evaluation.score);
+  const helpsLines = helpsAll.slice(0, helpsCap);
+  const downsides = downsidesAll.slice(0, hurtsCap);
+
+  return (
+    <ScreenWrapper title="Results" onBack={goBack} contentContainerStyle={styles.content}>
+      <FadeIn>
+        <Text style={styles.title} selectable>
+          {evaluation.title}
+        </Text>
+        <View style={styles.sourceRow}>
+          <Ionicons name={sourceIcon(evaluation.source)} size={14} color={colors.textSecondary} />
+          <Text style={styles.source} numberOfLines={1}>
+            {evaluation.source}
+          </Text>
+        </View>
+
+        <Card style={styles.scoreCard}>
+          <View style={[styles.badge, { backgroundColor: `${scoreColor}1F` }]}>
+            <Ionicons name={labelIcon(evaluation.score)} size={16} color={scoreColor} />
+            <Text style={[styles.badgeText, { color: scoreColor }]}>{evaluation.label}</Text>
+          </View>
+          <View style={styles.ringWrap}>
+            <ScoreRing score={evaluation.score} />
+          </View>
+        </Card>
+
+        {whyInsights.length > 0 ? (
+          <View style={styles.whyBlock}>
+            <Text style={styles.sectionHeading}>Why this score</Text>
+            <Card padding={20} style={styles.insightsCard}>
+              {whyInsights.map((insight, i) => (
+                <InsightRow
+                  key={`insight-${i}`}
+                  insight={insight}
+                  isLast={i === whyInsights.length - 1}
+                />
+              ))}
+            </Card>
+          </View>
+        ) : null}
+
+        <AnalysisList heading="How it helps" items={helpsLines} tone="positive" />
+        <AnalysisList heading="Downsides" items={downsides} tone="negative" />
+
+        <View style={styles.lockedWrap}>
+          {isPremium === true ? (
+            <>
+              <GuidanceCard guidance={evaluation.guidance} />
+              {evaluation.hasApplication ? (
+                <Pressable
+                  onPress={() => router.push('/application-help')}
+                  accessibilityRole="button"
+                  style={({ pressed }) => [styles.helpBtn, pressed && styles.pressed]}
+                >
+                  <Ionicons name="create-outline" size={16} color={colors.purple} />
+                  <Text style={styles.helpBtnLabel}>How to fill this form</Text>
+                </Pressable>
+              ) : null}
+            </>
+          ) : isPremium === false ? (
+            <LockedCard onUnlock={() => router.push('/paywall')} />
+          ) : (
+            <SoftSkeleton height={196} style={styles.guidanceSkeleton} />
+          )}
+        </View>
+
+        <Pressable
+          onPress={() => {
+            if (wasOpenedFromEvaluate() && router.canGoBack()) router.back();
+            else router.replace('/evaluate');
+          }}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.again, pressed && styles.pressed]}
+        >
+          <Text style={styles.againText}>Evaluate another</Text>
+        </Pressable>
+      </FadeIn>
+    </ScreenWrapper>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function uniqueLines(items: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of items) {
+    const trimmed = item.trim();
+    if (!trimmed || seen.has(trimmed)) continue;
+    seen.add(trimmed);
+    out.push(trimmed);
+  }
+  return out;
+}
+
+/** Helps / downside caps by score — must match evaluate+api.ts. */
+function scoreBandCaps(score: number): { helps: number; hurts: number } {
+  if (score >= 10) return { helps: 4, hurts: 1 };
+  if (score >= 7) return { helps: 4, hurts: 2 };
+  if (score >= 5) return { helps: 3, hurts: 3 };
+  if (score === 4) return { helps: 2, hurts: 4 };
+  return { helps: 1, hurts: 4 };
+}
+
+type IoniconName = ComponentProps<typeof Ionicons>['name'];
+
+function sourceIcon(source: string): IoniconName {
+  if (source === 'Screenshot') return 'image-outline';
+  if (source === 'Pasted text') return 'document-text-outline';
+  return 'link-outline';
+}
+
+function labelIcon(score: number): IoniconName {
+  if (score >= 8) return 'checkmark-circle';
+  if (score >= 5) return 'remove-circle';
+  return 'alert-circle';
+}
+
+const FADE_DURATION = 200;
+
+/** Opacity-only enter so the decision/score read first. */
+function FadeIn({ children }: { children: ReactNode }) {
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animation = Animated.timing(opacity, {
+      toValue: 1,
+      duration: FADE_DURATION,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: Platform.OS !== 'web',
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [opacity]);
+
+  return <Animated.View style={{ opacity }}>{children}</Animated.View>;
+}
+
+const styles = StyleSheet.create({
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+  },
+  titleSkeleton: {
+    width: '72%',
+  },
+  sourceSkeleton: {
+    width: '40%',
+    marginTop: 10,
+  },
+  scoreSkeleton: {
+    marginTop: 24,
+    borderRadius: 20,
+  },
+  blockSkeleton: {
+    marginTop: 28,
+    borderRadius: 20,
+  },
+  title: {
+    ...type.h2,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
+  },
+  sourceRow: {
+    marginTop: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  source: {
+    marginLeft: 6,
+    flex: 1,
+    fontFamily: fonts.regular,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.textSecondary,
+  },
+  scoreCard: {
+    marginTop: 28,
+    alignItems: 'center',
+    paddingVertical: 28,
+    paddingHorizontal: 24,
+  },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+  },
+  badgeText: {
+    marginLeft: 6,
+    fontFamily: fonts.semibold,
+    fontSize: 14,
+    lineHeight: 18,
+  },
+  ringWrap: {
+    marginTop: 20,
+  },
+  whyBlock: {
+    marginTop: 32,
+  },
+  sectionHeading: {
+    ...type.label,
+    marginBottom: 14,
+    fontFamily: fonts.semibold,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  insightsCard: {
+    paddingVertical: 8,
+  },
+  lockedWrap: {
+    marginTop: 28,
+  },
+  guidanceSkeleton: {
+    borderRadius: 20,
+  },
+  helpBtn: {
+    marginTop: 16,
+    alignSelf: 'center',
+    minHeight: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: colors.purpleBorder,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  helpBtnLabel: {
+    fontFamily: fonts.semibold,
+    fontSize: 14,
+    lineHeight: 18,
+    color: colors.purple,
+  },
+  again: {
+    marginTop: 12,
+    marginBottom: 8,
+    alignSelf: 'center',
+    minHeight: 44,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+  },
+  pressed: {
+    opacity: 0.6,
+  },
+  againText: {
+    fontFamily: fonts.semibold,
+    fontSize: 15,
+    lineHeight: 20,
+    color: colors.purple,
+  },
+});
