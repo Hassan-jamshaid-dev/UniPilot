@@ -33,7 +33,7 @@ export function TabBarIcon({
       <Ionicons name={focused ? filled : outline} size={size} color={color as IconColor} />
       {locked ? (
         <View style={styles.lockBadge}>
-          <Ionicons name="lock-closed" size={8} color={colors.white} />
+          <Ionicons name="lock-closed" size={8} color={colors.textOnAccent} />
         </View>
       ) : null}
     </View>
@@ -76,11 +76,11 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: colors.white,
+    borderColor: colors.primary,
   },
   labelCol: {
     alignItems: 'center',

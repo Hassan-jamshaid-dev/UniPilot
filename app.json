@@ -2,7 +2,7 @@
   "expo": {
     "name": "UniPilot",
     "slug": "unipilot",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "unipilot",
@@ -48,12 +48,6 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    },
-    "extra": {
-      "eas": {
-        "projectId": "84c1a658-cca3-4e5d-a4a1-ef58c21758ee"
-      }
-    },
-    "owner": "vetly"
+    }
   }
 }

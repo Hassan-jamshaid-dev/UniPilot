@@ -1,4 +1,7 @@
 // UniPilot colour palette. Import from here instead of hard-coding hex values.
+// Palette version bump: navy / cream / mustard (forces Metro to re-resolve this module).
+export const PALETTE_ID = 'navy-cream-mustard-v2';
+
 export const colors = {
   // Brand — deep navy (kept as `purple` so existing screens keep compiling)
   purple: '#0A192F',
@@ -40,8 +43,10 @@ export const colors = {
   // Lines and fills
   /** Hairline separators: tab bar top border, InsightRow dividers, ScoreRing track. */
   hairline: '#E8E2D6',
-  /** Inactive tab icon/label tint, and the "neutral" insight dot. */
+  /** Inactive tab icon/label tint on navy tab bar. */
   tabInactive: '#8A93A0',
+  /** Inactive tab tint when the bar itself is navy. */
+  tabInactiveOnNavy: '#FFFFFF99',
   /** Small chevron / disclosure glyphs on list rows. */
   chevron: '#A8B0BA',
   /** Grey bars in the faded placeholder behind LockedCard. */
@@ -58,13 +63,15 @@ export const colors = {
   accentTint: '#FBF0D9',
 
   // Controls
-  /** Splash progress-bar track. */
-  progressTrack: '#FFFFFF33',
+  /** Cream-surface progress / ScoreRing track (visible on soft backgrounds). */
+  progressTrack: '#E8E2D6',
+  /** Splash progress-bar track on navy. */
+  splashProgressTrack: '#FFFFFF33',
   /** Flat fill for a disabled GradientButton. */
   buttonDisabled: '#C5CBD4',
 
-  // Status colours (used by later screens, e.g. evaluation verdicts)
-  success: '#2F6B4F',
+  // Status colours — teal success (not forest-brand green)
+  success: '#0F766E',
   warning: '#E8AF50',
   danger: '#EF4444',
 
@@ -78,10 +85,12 @@ export const colors = {
 
   // Brand mark (UniPilot U + plane)
   mark: {
-    forest: '#0A192F',
-    green: '#1B2A4A',
+    navy: '#0A192F',
+    navySoft: '#1B2A4A',
     accent: '#E8AF50',
     // Legacy keys remapped so older gradient stops still resolve
+    forest: '#0A192F',
+    green: '#1B2A4A',
     violet: '#0A192F',
     purple: '#1B2A4A',
     blue: '#1B2A4A',
@@ -90,8 +99,8 @@ export const colors = {
 
   // Decorative shapes on Splash / Onboarding / corner curves
   decor: {
-    forest: '#0A192F',
-    forestSoft: '#1B2A4A',
+    navy: '#0A192F',
+    navySoft: '#1B2A4A',
     ochre: '#E8AF50',
     ochreSoft: '#F0C56E',
     cream: '#FDF8F0',
@@ -106,7 +115,9 @@ export const colors = {
     sparkle: '#E8AF50',
     dot: '#1B2A4A',
     sphereLight: '#8A93A0',
-    // Legacy pastel names remapped away from violet / green
+    // Legacy names remapped away from violet / forest green
+    forest: '#0A192F',
+    forestSoft: '#1B2A4A',
     periwinkle: '#D6DEE8',
     lavender: '#E8EEF5',
     ice: '#EEF2F8',

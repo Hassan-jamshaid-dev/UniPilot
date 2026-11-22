@@ -34,7 +34,7 @@ export function PaywallDecor({ width: w, height: h }: PaywallDecorProps) {
         cy={0.42 * h}
         width={0.7 * w}
         height={0.5 * w}
-        color={colors.decor.forestSoft}
+        color={colors.decor.navySoft}
         opacity={0.18}
         rotate={16}
       />

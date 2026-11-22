@@ -31,7 +31,7 @@ export function OnboardingDecor({ width: w, heroHeight: hh, markCenterY: cy }: O
         height={0.48 * w}
         rotate={-32}
         opacity={0.4}
-        color={colors.decor.forest}
+        color={colors.decor.navy}
       />
       <Blob
         cx={0.0 * w}
@@ -49,7 +49,7 @@ export function OnboardingDecor({ width: w, heroHeight: hh, markCenterY: cy }: O
         height={0.62 * w}
         rotate={-12}
         opacity={0.28}
-        color={colors.decor.forestSoft}
+        color={colors.decor.navySoft}
       />
       <Blob cx={cx} cy={cy} width={0.78 * w} color={colors.decor.glow} opacity={0.75} />
     </View>

@@ -70,7 +70,7 @@ function BlobSvg({
       {/* Outer navy curve */}
       <Path
         d="M0 0 H92 C78 28 74 52 58 78 C40 106 18 122 0 132 Z"
-        fill={colors.decor.forest}
+        fill={colors.decor.navy}
         opacity={0.92}
       />
       {/* Inner mustard accent curve */}
@@ -82,7 +82,7 @@ function BlobSvg({
       {/* Soft navy overlap tip */}
       <Path
         d="M0 72 C18 70 34 58 44 40 C36 58 22 72 0 78 Z"
-        fill={colors.decor.forestSoft}
+        fill={colors.decor.navySoft}
         opacity={0.55}
       />
     </Svg>

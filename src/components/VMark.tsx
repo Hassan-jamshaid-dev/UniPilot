@@ -25,8 +25,8 @@ export type VMarkProps = {
 /** The U + plane mark with no background; sits directly on whatever is behind it. */
 export function VMark({ size, tone = 'brand', style }: VMarkProps) {
   const gradientId = `upmark-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
-  const stemStart = tone === 'onDark' ? colors.white : colors.mark.green;
-  const stemEnd = tone === 'onDark' ? '#F5F7FA' : colors.mark.forest;
+  const stemStart = tone === 'onDark' ? colors.white : colors.mark.navySoft;
+  const stemEnd = tone === 'onDark' ? colors.white : colors.mark.navy;
 
   return (
     <Svg

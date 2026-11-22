@@ -21,8 +21,11 @@ import {
   isNativePurchasesAvailable,
   refreshPremiumFromRevenueCat,
 } from '@/services/purchases';
-import { colors } from '@/theme/colors';
+import { colors, PALETTE_ID } from '@/theme/colors';
 import { fonts } from '@/theme/typography';
+
+// Keep palette id referenced so Metro always ships the navy/mustard token module.
+void PALETTE_ID;
 
 // Keep the native splash up until our fonts are ready so no screen ever
 // renders with a fallback typeface.

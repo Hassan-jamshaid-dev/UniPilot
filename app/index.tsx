@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     width: BAR_WIDTH,
     height: BAR_HEIGHT,
     borderRadius: BAR_HEIGHT / 2,
-    backgroundColor: colors.progressTrack,
+    backgroundColor: colors.splashProgressTrack,
     overflow: 'hidden',
     zIndex: 2,
   },
