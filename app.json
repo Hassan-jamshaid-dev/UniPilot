@@ -1,19 +1,19 @@
 {
   "expo": {
     "name": "UniPilot",
-    "slug": "vetly",
+    "slug": "unipilot",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "vetly",
+    "scheme": "unipilot",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.vetly.app"
+      "bundleIdentifier": "com.unipilot.app"
     },
     "android": {
       "softwareKeyboardLayoutMode": "resize",
-      "package": "com.vetly.app",
+      "package": "com.unipilot.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#0A192F"
